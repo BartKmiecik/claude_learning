@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "todo-cli"
+version = "0.1.0"
+description = "Minimal task manager CLI built while learning Claude Code"
+requires-python = ">=3.10"
+
+[project.scripts]
+todo = "todo_cli.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "black>=24",
+]
+
+[tool.setuptools.packages.find]
+include = ["todo_cli*"]
