@@ -63,3 +63,21 @@ class TaskStore:
 
     def list(self) -> list[Task]:
         return [Task(**t) for t in self._load()]
+
+    def done(self, task_id: int) -> Task:
+        tasks = self._load()
+        for t in tasks:
+            if t["id"] == task_id:
+                t["done"] = True
+                self._save(tasks)
+                return Task(**t)
+        raise KeyError(task_id)
+
+    def remove(self, task_id: int) -> Task:
+        tasks = self._load()
+        for t in tasks:
+            if t["id"] == task_id:
+                tasks.remove(t)
+                self._save(tasks)
+                return Task(**t)
+        raise KeyError(task_id)

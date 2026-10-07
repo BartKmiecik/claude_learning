@@ -76,3 +76,40 @@ def test_malformed_element_raises_store_error(tmp_path, content):
 
     with pytest.raises(StoreError, match="corrupted"):
         store.add("anything")
+
+
+def test_done_marks_task_done(store):
+    store.add("do the thing")
+
+    updated = store.done(1)
+
+    assert updated.done is True
+    assert store.list()[0].done is True
+
+
+def test_done_with_unknown_id_raises_keyerror(store):
+    with pytest.raises(KeyError):
+        store.done(99)
+
+
+def test_remove_deletes_task(store):
+    store.add("temporary")
+
+    removed = store.remove(1)
+
+    assert removed.text == "temporary"
+    assert store.list() == []
+
+
+def test_remove_with_unknown_id_raises_keyerror(store):
+    with pytest.raises(KeyError):
+        store.remove(99)
+
+
+def test_corrupt_json_raises_store_error(tmp_path):
+    bad = tmp_path / "tasks.json"
+    bad.write_text("{not valid json", encoding="utf-8")
+    store = TaskStore(bad)
+
+    with pytest.raises(StoreError, match="corrupted"):
+        store.list()
