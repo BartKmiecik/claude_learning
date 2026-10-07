@@ -36,6 +36,9 @@ class TaskStore:
             raise StoreError(f"Task file is corrupted: {self.path}") from exc
         if not isinstance(data, list):
             raise StoreError(f"Task file has an unexpected format: {self.path}")
+        for item in data:
+            if not isinstance(item, dict) or not {"id", "text"} <= item.keys():
+                raise StoreError(f"Task file is corrupted: {self.path}")
         return data
 
     def _save(self, tasks: list[dict]) -> None:

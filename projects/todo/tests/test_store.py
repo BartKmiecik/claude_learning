@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from todo_cli.store import TaskStore
+from todo_cli.store import StoreError, TaskStore
 
 
 @pytest.fixture
@@ -56,3 +56,23 @@ def test_persistence_survives_new_store_instance(store):
     reopened = TaskStore(store.path)
 
     assert [t.text for t in reopened.list()] == ["survivor"]
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        '[{"id": 1}]',  # missing text
+        '[{"text": "no id"}]',  # missing id
+        "[null]",  # not a dict
+    ],
+)
+def test_malformed_element_raises_store_error(tmp_path, content):
+    bad = tmp_path / "tasks.json"
+    bad.write_text(content, encoding="utf-8")
+    store = TaskStore(bad)
+
+    with pytest.raises(StoreError, match="corrupted"):
+        store.list()
+
+    with pytest.raises(StoreError, match="corrupted"):
+        store.add("anything")
