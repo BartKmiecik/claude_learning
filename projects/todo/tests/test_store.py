@@ -84,11 +84,13 @@ def test_done_marks_task_done(store):
     updated = store.done(1)
 
     assert updated.done is True
+    assert updated.id == 1
+    assert updated.text == "do the thing"
     assert store.list()[0].done is True
 
 
 def test_done_with_unknown_id_raises_keyerror(store):
-    with pytest.raises(KeyError):
+    with pytest.raises(KeyError, match="99"):
         store.done(99)
 
 
@@ -102,7 +104,7 @@ def test_remove_deletes_task(store):
 
 
 def test_remove_with_unknown_id_raises_keyerror(store):
-    with pytest.raises(KeyError):
+    with pytest.raises(KeyError, match="99"):
         store.remove(99)
 
 

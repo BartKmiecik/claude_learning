@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from todo_cli.cli import main
@@ -33,7 +35,9 @@ def test_list_prints_markers(store_path, capsys):
     main(["add", "first"], store_path=store_path)
     main(["add", "second"], store_path=store_path)
     main(["done", "1"], store_path=store_path)
-    capsys.readouterr()  # drain setup output before the call under test
+    # drain setup output so the assertions below see only the call under
+    # test (capsys accumulates across calls; it doesn't reset)
+    capsys.readouterr()
 
     code, out = run_cli(["list"], store_path, capsys)
 
@@ -43,7 +47,9 @@ def test_list_prints_markers(store_path, capsys):
 
 def test_done_and_remove_print_confirmations(store_path, capsys):
     main(["add", "task"], store_path=store_path)
-    capsys.readouterr()  # drain setup output before the call under test
+    # drain setup output so the assertions below see only the call under
+    # test (capsys accumulates across calls; it doesn't reset)
+    capsys.readouterr()
 
     code, out = run_cli(["done", "1"], store_path, capsys)
     assert code == 0
@@ -68,3 +74,16 @@ def test_corrupt_file_prints_error(store_path, capsys):
 
     assert code == 1
     assert f"corrupted: {store_path}" in out.err
+
+
+def test_remove_unknown_id_prints_error(store_path, capsys):
+    code, out = run_cli(["remove", "99"], store_path, capsys)
+
+    assert code == 1
+    assert out.err == "No task #99\n"
+
+
+def test_default_store_path_is_in_home_dir():
+    from todo_cli.cli import default_store_path
+
+    assert default_store_path() == Path.home() / ".todo" / "tasks.json"

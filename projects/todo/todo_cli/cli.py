@@ -36,7 +36,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None, store_path: Path | None = None) -> int:
     """Run the CLI. argv/store_path are injectable so tests never touch the real store."""
     args = build_parser().parse_args(argv)
-    store = TaskStore(store_path or default_store_path())
+    store = TaskStore(store_path if store_path is not None else default_store_path())
     try:
         if args.command == "add":
             if not args.text.strip():
