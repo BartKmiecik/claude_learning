@@ -60,4 +60,7 @@ def main(argv: list[str] | None = None, store_path: Path | None = None) -> int:
     except StoreError as exc:
         print(exc, file=sys.stderr)
         return 1
+    except OSError as exc:
+        print(f"Could not access the task file: {exc}", file=sys.stderr)
+        return 1
     return 0

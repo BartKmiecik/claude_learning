@@ -16,3 +16,10 @@ A minimal task manager CLI. Storage: JSON at `~/.todo/tasks.json`.
 - Tests: `venv\Scripts\python.exe -m pytest projects\todo\tests -v`
 - Run the CLI: `todo <command>` (installed editable into the venv)
 - Commit per plan task with conventional messages (feat:, test:, chore:)
+
+## Known limitations (todo)
+
+- Atomic-save behavior (temp file + os.replace) is implemented but not directly
+  unit-tested — hard to assert portably on Windows.
+- The store itself does not reject whitespace-only task text; the CLI does.
+  Validation lives at the CLI layer by design.

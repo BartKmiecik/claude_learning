@@ -87,3 +87,11 @@ def test_default_store_path_is_in_home_dir():
     from todo_cli.cli import default_store_path
 
     assert default_store_path() == Path.home() / ".todo" / "tasks.json"
+
+
+def test_unreadable_store_prints_clean_error(tmp_path, capsys):
+    # A directory as the store path makes reads fail with an OSError
+    code, out = run_cli(["list"], tmp_path, capsys)
+
+    assert code == 1
+    assert "Could not access the task file" in out.err
