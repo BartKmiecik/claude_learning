@@ -10,8 +10,8 @@ os.replace). Two modules with a clean boundary: `store.py` owns persistence,
 ## Step by Step
 
 1. **Skeleton** — `pyproject.toml` with a `todo` console script and dev deps
-   (pytest, black), installed editable into the venv; `CLAUDE.md` written for
-   the repo.
+   (pytest, black), installed editable into the venv; a root `CLAUDE.md`
+   written for the repo.
 2. **First hook** — a PostToolUse hook in `.claude/settings.json` that runs
    black on every edited `.py` file (stdin JSON → `tool_input.file_path`).
 3. **Store, test-first** — wrote failing tests, watched them fail, implemented:
@@ -28,7 +28,8 @@ os.replace). Two modules with a clean boundary: `store.py` owns persistence,
 - **CLAUDE.md**: Claude's persistent project memory — conventions and commands.
 - **Permissions**: approving/denying tool calls and what each prompt means.
 - **Hooks**: PostToolUse fires after every Edit/Write; reads tool JSON from
-  stdin; exit codes control feedback. PostToolUse can never block.
+  stdin; exit codes control the feedback Claude sees. PostToolUse runs after
+  the tool has already executed — it can never block the action itself.
 - **Subagents**: each plan task was implemented and reviewed by fresh
   subagents — implementer, spec reviewer, code quality reviewer.
 - **TDD discipline**: red → green → refactor, one commit per task.
@@ -37,4 +38,4 @@ os.replace). Two modules with a clean boundary: `store.py` owns persistence,
 
 - `projects/todo/pyproject.toml`, `projects/todo/todo_cli/{store,cli}.py`
 - `projects/todo/tests/{test_store,test_cli}.py`, `.claude/settings.json`
-- `CLAUDE.md`
+- `CLAUDE.md` (repo root)
