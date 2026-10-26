@@ -291,7 +291,7 @@ def test_max_drawdown_from_peak():
 
 def test_cross_flags_golden_cross_recent():
     # SMA50 below SMA200 for 200 rows, then a sharp rally crosses it up in the last 5
-    closes = [100.0] * 200 + [300.0] * 10
+    closes = [100.0] * 200 + [300.0] * 5
     s = compute_signals(frame(closes))
     assert s["sma50_above_sma200"] is True
     assert s["golden_cross_recent"] is True
