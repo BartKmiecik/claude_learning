@@ -2167,6 +2167,25 @@ def test_report_renders_agent_section_and_hit_counter(data_dir, persona_path, tm
     assert "1/1" in html  # hit counter
     assert "Ryzyka" in html  # risks section (§11)
     assert "x" in html  # the predicted risk is rendered
+
+
+def test_report_escapes_llm_and_news_text(data_dir, persona_path, tmp_path, watchlist):
+    entries_path = tmp_path / "journal" / "entries.jsonl"
+    pred = prediction()
+    pred["analysis"] = "<script>alert(1)</script>"
+    pred["predictions"][0]["rationale"] = "a < b & c"
+    stored = append_entry(entries_path, {"prediction": pred})
+    entries_path.write_text(json.dumps(stored, ensure_ascii=False) + "\n", encoding="utf-8")
+    (data_dir / "news.json").write_text(
+        json.dumps([{"title": "<b>Nagłówek</b>", "published": "2026-10-26", "link": "https://x/?a='1'"}]),
+        encoding="utf-8",
+    )
+    out = tmp_path / "report.html"
+    render_report(watchlist, data_dir, persona_path, entries_path, out)
+    html_out = out.read_text(encoding="utf-8")
+    assert "&lt;script&gt;" in html_out
+    assert "<script>alert" not in html_out
+    assert "&lt;b&gt;Nagłówek&lt;/b&gt;" in html_out
 ```
 
 - [ ] **Step 2: Run the tests to verify they fail**
@@ -2181,6 +2200,7 @@ Expected: FAIL — `ModuleNotFoundError: No module named 'agent_gieldowy.report'
 ```python
 """Self-contained plotly HTML report: data, signals, agent, journal, news."""
 
+import html
 import json
 from pathlib import Path
 
@@ -2228,9 +2248,9 @@ def _prediction_table(prediction: dict) -> str:
     rows = []
     for p in prediction["predictions"]:
         rows.append(
-            f"<tr><td>{p['symbol']}</td><td>{p['direction']}</td>"
+            f"<tr><td>{html.escape(p['symbol'])}</td><td>{html.escape(p['direction'])}</td>"
             f"<td>{p['range_pct']['min']}% do {p['range_pct']['max']}%</td>"
-            f"<td>{p['confidence']}</td><td>{p['rationale']}</td></tr>"
+            f"<td>{p['confidence']}</td><td>{html.escape(p['rationale'])}</td></tr>"
         )
     body = "".join(rows)
     return (
@@ -2251,16 +2271,14 @@ def _hit_counter(entries: list) -> str:
 
 def _journal_entry_html(entry: dict) -> str:
     pred = entry.get("prediction") or {}
-    summary = pred.get("summary", "—")
+    summary = html.escape(str(pred.get("summary", "—")))
     outcomes = entry.get("outcomes") or {}
     marks = " ".join(
-        f"{sym}: {'✓' if o.get('direction_hit') else '✗' if o.get('scored') else '?'}"
+        f"{html.escape(sym)}: {'✓' if o.get('direction_hit') else '✗' if o.get('scored') else '?'}"
         for sym, o in outcomes.items()
     )
-    reflection = f"<p><em>{entry['reflection']}</em></p>" if entry.get("reflection") else ""
-    return (
-        f"<li>{entry['created_at'][:10]} — {summary} [{marks}]</li>{reflection}"
-    )
+    reflection = f"<p><em>{html.escape(entry['reflection'])}</em></p>" if entry.get("reflection") else ""
+    return f"<li>{entry['created_at'][:10]} — {summary} [{marks}]</li>{reflection}"
 
 
 def render_report(watchlist: dict, data_dir, persona_path, entries_path, out_path) -> str:
@@ -2277,7 +2295,7 @@ def render_report(watchlist: dict, data_dir, persona_path, entries_path, out_pat
     for item in all_symbols(watchlist):
         symbol = item["symbol"]
         path = data_dir / f"{symbol}.csv"
-        parts.append(f"<h2>{symbol}</h2>")
+        parts.append(f"<h2>{html.escape(symbol)}</h2>")
         if not path.exists():
             parts.append("<p>Brak danych.</p>")
             continue
@@ -2293,16 +2311,16 @@ def render_report(watchlist: dict, data_dir, persona_path, entries_path, out_pat
     if latest and latest.get("prediction"):
         persona = load_persona(persona_path)
         parts.append(
-            f"<p><strong>{persona['name']}</strong> — {persona['profession']}, "
-            f"{persona['city']}. Skłonności: {', '.join(persona['biases'])}.</p>"
+            f"<p><strong>{html.escape(persona['name'])}</strong> — {html.escape(persona['profession'])}, "
+            f"{html.escape(persona['city'])}. Skłonności: {', '.join(html.escape(b) for b in persona['biases'])}.</p>"
         )
         parts.append(_prediction_table(latest["prediction"]))
         parts.append("<h3>Ryzyka</h3><ul>")
         for p in latest["prediction"]["predictions"]:
-            risks = "".join(f"<li>{r}</li>" for r in p.get("risks", [])) or "<li>—</li>"
-            parts.append(f"<li><strong>{p['symbol']}:</strong><ul>{risks}</ul></li>")
+            risks = "".join(f"<li>{html.escape(r)}</li>" for r in p.get("risks", [])) or "<li>—</li>"
+            parts.append(f"<li><strong>{html.escape(p['symbol'])}:</strong><ul>{risks}</ul></li>")
         parts.append("</ul>")
-        parts.append(f"<p>{latest['prediction']['analysis']}</p>")
+        parts.append(f"<p>{html.escape(latest['prediction']['analysis'])}</p>")
     else:
         parts.append("<p>Brak prognozy — uruchom `agent-gieldowy analyze`.</p>")
     parts.append("<h2>Dziennik agenta</h2>")
@@ -2317,7 +2335,7 @@ def render_report(watchlist: dict, data_dir, persona_path, entries_path, out_pat
     if news_path.exists():
         parts.append("<h2>Wiadomości</h2><ul>")
         for n in json.loads(news_path.read_text(encoding="utf-8")):
-            parts.append(f"<li><a href='{n['link']}'>{n['title']}</a> — {n['published']}</li>")
+            parts.append(f"<li><a href='{html.escape(n['link'])}'>{html.escape(n['title'])}</a> — {html.escape(n['published'])}</li>")
         parts.append("</ul>")
     parts.append("</body></html>")
     out_path = Path(out_path)
@@ -2329,7 +2347,7 @@ def render_report(watchlist: dict, data_dir, persona_path, entries_path, out_pat
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `.venv/Scripts/python -m pytest tests/test_report.py -v`
-Expected: PASS (3 tests)
+Expected: PASS (4 tests)
 
 - [ ] **Step 5: Commit**
 
@@ -2673,7 +2691,7 @@ Run: `.venv/Scripts/python -m pytest tests/test_cli.py -v`
 Expected: PASS (8 tests)
 
 Run: `.venv/Scripts/python -m pytest` — the full suite (live tests excluded by the `addopts` marker filter).
-Expected: PASS with **zero failures** (count: 7 signals + 8 collector + 4 news + 5 journal + 4 persona + 13 agent + 8 evaluate + 3 report + 9 cli = 61; live tests are deselected by `-m 'not live'`, not counted).
+Expected: PASS with **zero failures** (count: 7 signals + 8 collector + 4 news + 5 journal + 4 persona + 13 agent + 8 evaluate + 4 report + 9 cli = 62; live tests are deselected by `-m 'not live'`, not counted).
 
 - [ ] **Step 5: Verify the entry point works end to end with mocked-free commands**
 
