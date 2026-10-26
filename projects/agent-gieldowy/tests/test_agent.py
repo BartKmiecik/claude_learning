@@ -188,6 +188,24 @@ def test_analyze_wraps_auth_error_with_instruction():
     assert "ant auth login" in str(exc.value)
 
 
+def test_analyze_translates_sdk_no_credentials_typeerror():
+    no_creds = TypeError(
+        "Could not resolve authentication method. Expected one of api_key, "
+        "auth_token, or credentials to be set."
+    )
+    client = FakeClient([no_creds])
+    with pytest.raises(AgentError) as exc:
+        analyze("p", "m", ["PKO.WA"], client=client)
+    assert "ant auth login" in str(exc.value)
+
+
+def test_analyze_reraises_unrelated_typeerror():
+    unrelated = TypeError("unsupported operand type(s)")
+    client = FakeClient([unrelated])
+    with pytest.raises(TypeError):
+        analyze("p", "m", ["PKO.WA"], client=client)
+
+
 def test_analyze_parses_garbage_then_retries():
     garbage = SimpleNamespace(content=[SimpleNamespace(type="text", text="not-json {")])
     client = FakeClient([garbage, valid_prediction()])

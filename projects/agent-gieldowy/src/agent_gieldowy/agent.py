@@ -158,6 +158,17 @@ def analyze(
             last_error = exc
             time.sleep(2 * (attempt + 1))
             continue
+        except TypeError as exc:
+            # SDK 2.x raises a client-side TypeError (not AuthenticationError)
+            # when no credentials resolve — translate to the Polish guidance;
+            # any other TypeError is a programming error and must propagate.
+            message = str(exc).lower()
+            if "authentication" in message or "credentials" in message:
+                raise AgentError(
+                    "brak danych uwierzytelniających Claude API — uruchom `ant auth login` "
+                    "albo ustaw zmienną ANTHROPIC_API_KEY"
+                ) from exc
+            raise
         except anthropic.APIConnectionError as exc:
             raise AgentError(f"brak połączenia z API: {exc}") from exc
         except anthropic.AuthenticationError as exc:
