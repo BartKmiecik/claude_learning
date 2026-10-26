@@ -611,6 +611,21 @@ def test_incremental_appends_only_new_rows(tmp_path):
     assert stored.iloc[-1]["close"] == 999.0
 
 
+def test_malformed_payload_reported_not_fatal(tmp_path, watchlist):
+    # A malformed payload (unknown/renamed fund shape) must not abort the batch
+    session = FakeSession(
+        [
+            FakeResponse(yahoo_payload(bdate_range(400), [100.0] * 400)),  # PKO.WA ok
+            FakeResponse(yahoo_payload(bdate_range(400), [200.0] * 400)),  # WIG20.WA ok
+            FakeResponse({"data": []}),  # AGF04 malformed
+        ]
+    )
+    results = collect(watchlist, tmp_path / "data", session)
+    assert results["AGF04"]["status"] == "error"
+    assert results["PKO.WA"]["status"] == "ok"
+    assert results["WIG20.WA"]["status"] == "ok"
+
+
 def test_retries_then_raises_on_persistent_network_error():
     def boom(url, params=None, headers=None, timeout=None):
         raise requests.RequestException("connection refused")
@@ -713,7 +728,7 @@ def fetch_quotes(symbol: str, kind: str, session=None) -> pd.DataFrame:
     if kind == "fund":
         resp = http_get(BANKIER_URL, params={"symbol": symbol}, session=session)
         payload = resp.json()
-        rows = payload["data"][0]["data"]  # [[epoch_ms, nav], ...]
+        rows = ((payload.get("data") or [{}])[0] or {}).get("data", [])  # [[epoch_ms, nav], ...]
         if not rows:
             raise UnknownSymbolError(f"bankier returned no data for {symbol}")
         df = pd.DataFrame(rows, columns=["epoch_ms", "close"])
@@ -758,7 +773,9 @@ def collect(watchlist: dict, data_dir, session=None) -> dict:
             df = fetch_quotes(item["symbol"], item["kind"], session)
             appended = save_incremental(item["symbol"], df, data_dir)
             results[item["symbol"]] = {"status": "ok", "rows": len(df), "appended": appended}
-        except CollectorError as exc:
+        except (CollectorError, ValueError, KeyError, IndexError) as exc:
+            # one failing symbol never aborts the others (spec §6.1/§9) —
+            # malformed payloads surface as ValueError/KeyError/IndexError
             results[item["symbol"]] = {"status": "error", "error": str(exc)}
     return results
 ```
