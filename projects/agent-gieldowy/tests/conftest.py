@@ -11,6 +11,7 @@ class FakeResponse:
     def __init__(self, payload=None, text="", status_code=200):
         self._payload = payload
         self.text = text
+        self.content = text.encode("utf-8")
         self.status_code = status_code
 
     def raise_for_status(self):
