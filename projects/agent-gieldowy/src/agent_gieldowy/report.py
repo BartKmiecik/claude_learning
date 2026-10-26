@@ -1,5 +1,6 @@
 """Self-contained plotly HTML report: data, signals, agent, journal, news."""
 
+import html
 import json
 from pathlib import Path
 
@@ -49,9 +50,9 @@ def _prediction_table(prediction: dict) -> str:
     rows = []
     for p in prediction["predictions"]:
         rows.append(
-            f"<tr><td>{p['symbol']}</td><td>{p['direction']}</td>"
+            f"<tr><td>{html.escape(p['symbol'])}</td><td>{html.escape(p['direction'])}</td>"
             f"<td>{p['range_pct']['min']}% do {p['range_pct']['max']}%</td>"
-            f"<td>{p['confidence']}</td><td>{p['rationale']}</td></tr>"
+            f"<td>{p['confidence']}</td><td>{html.escape(p['rationale'])}</td></tr>"
         )
     body = "".join(rows)
     return (
@@ -72,14 +73,16 @@ def _hit_counter(entries: list) -> str:
 
 def _journal_entry_html(entry: dict) -> str:
     pred = entry.get("prediction") or {}
-    summary = pred.get("summary", "—")
+    summary = html.escape(str(pred.get("summary", "—")))
     outcomes = entry.get("outcomes") or {}
     marks = " ".join(
-        f"{sym}: {'✓' if o.get('direction_hit') else '✗' if o.get('scored') else '?'}"
+        f"{html.escape(sym)}: {'✓' if o.get('direction_hit') else '✗' if o.get('scored') else '?'}"
         for sym, o in outcomes.items()
     )
     reflection = (
-        f"<p><em>{entry['reflection']}</em></p>" if entry.get("reflection") else ""
+        f"<p><em>{html.escape(entry['reflection'])}</em></p>"
+        if entry.get("reflection")
+        else ""
     )
     return f"<li>{entry['created_at'][:10]} — {summary} [{marks}]</li>{reflection}"
 
@@ -100,7 +103,7 @@ def render_report(
     for item in all_symbols(watchlist):
         symbol = item["symbol"]
         path = data_dir / f"{symbol}.csv"
-        parts.append(f"<h2>{symbol}</h2>")
+        parts.append(f"<h2>{html.escape(symbol)}</h2>")
         if not path.exists():
             parts.append("<p>Brak danych.</p>")
             continue
@@ -116,16 +119,21 @@ def render_report(
     if latest and latest.get("prediction"):
         persona = load_persona(persona_path)
         parts.append(
-            f"<p><strong>{persona['name']}</strong> — {persona['profession']}, "
-            f"{persona['city']}. Skłonności: {', '.join(persona['biases'])}.</p>"
+            f"<p><strong>{html.escape(persona['name'])}</strong> — {html.escape(persona['profession'])}, "
+            f"{html.escape(persona['city'])}. Skłonności: {', '.join(html.escape(b) for b in persona['biases'])}.</p>"
         )
         parts.append(_prediction_table(latest["prediction"]))
         parts.append("<h3>Ryzyka</h3><ul>")
         for p in latest["prediction"]["predictions"]:
-            risks = "".join(f"<li>{r}</li>" for r in p.get("risks", [])) or "<li>—</li>"
-            parts.append(f"<li><strong>{p['symbol']}:</strong><ul>{risks}</ul></li>")
+            risks = (
+                "".join(f"<li>{html.escape(r)}</li>" for r in p.get("risks", []))
+                or "<li>—</li>"
+            )
+            parts.append(
+                f"<li><strong>{html.escape(p['symbol'])}:</strong><ul>{risks}</ul></li>"
+            )
         parts.append("</ul>")
-        parts.append(f"<p>{latest['prediction']['analysis']}</p>")
+        parts.append(f"<p>{html.escape(latest['prediction']['analysis'])}</p>")
     else:
         parts.append("<p>Brak prognozy — uruchom `agent-gieldowy analyze`.</p>")
     parts.append("<h2>Dziennik agenta</h2>")
@@ -143,7 +151,7 @@ def render_report(
         parts.append("<h2>Wiadomości</h2><ul>")
         for n in json.loads(news_path.read_text(encoding="utf-8")):
             parts.append(
-                f"<li><a href='{n['link']}'>{n['title']}</a> — {n['published']}</li>"
+                f"<li><a href='{html.escape(n['link'])}'>{html.escape(n['title'])}</a> — {html.escape(n['published'])}</li>"
             )
         parts.append("</ul>")
     parts.append("</body></html>")

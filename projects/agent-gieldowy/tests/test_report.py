@@ -127,3 +127,32 @@ def test_report_renders_agent_section_and_hit_counter(
     assert "1/1" in html  # hit counter
     assert "Ryzyka" in html  # risks section (§11)
     assert "x" in html  # the predicted risk is rendered
+
+
+def test_report_escapes_llm_and_news_text(data_dir, persona_path, tmp_path, watchlist):
+    entries_path = tmp_path / "journal" / "entries.jsonl"
+    pred = prediction()
+    pred["analysis"] = "<script>alert(1)</script>"
+    pred["predictions"][0]["rationale"] = "a < b & c"
+    stored = append_entry(entries_path, {"prediction": pred})
+    entries_path.write_text(
+        json.dumps(stored, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    (data_dir / "news.json").write_text(
+        json.dumps(
+            [
+                {
+                    "title": "<b>Nagłówek</b>",
+                    "published": "2026-10-26",
+                    "link": "https://x/?a='1'",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "report.html"
+    render_report(watchlist, data_dir, persona_path, entries_path, out)
+    html_out = out.read_text(encoding="utf-8")
+    assert "&lt;script&gt;" in html_out
+    assert "<script>alert" not in html_out
+    assert "&lt;b&gt;Nagłówek&lt;/b&gt;" in html_out
