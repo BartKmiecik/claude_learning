@@ -1499,15 +1499,13 @@ def test_analyze_wraps_auth_error_with_instruction():
 
 
 def test_analyze_parses_garbage_then_retries():
-    class Garbage:
-        pass
-
-    client = FakeClient([Garbage(), valid_prediction()])
+    garbage = SimpleNamespace(content=[SimpleNamespace(type="text", text="not-json {")])
+    client = FakeClient([garbage, valid_prediction()])
     result = analyze("p", "m", ["PKO.WA"], client=client)
     assert result["predictions"][0]["symbol"] == "PKO.WA"
 ```
 
-Note: `json.dumps` of a `SimpleNamespace` raises `TypeError`, not `JSONDecodeError` — the implementation must catch both (see Step 3).
+Note: a garbage response arrives as a response with unparseable text (caught as `JSONDecodeError` in the parse step) — not as an exception raised inside `create`, which would be a programming error the error chain must not swallow.
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
