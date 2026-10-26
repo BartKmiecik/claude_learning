@@ -118,7 +118,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
+pythonpath = ["src", "tests"]
 testpaths = ["tests"]
 addopts = "-m 'not live'"
 markers = ["live: live smoke tests — run manually with `pytest -m live`"]
@@ -562,8 +562,9 @@ def test_fetch_quotes_fund_parses_bankier_payload():
     navs = [50.0 + i * 0.05 for i in range(400)]
     session = FakeSession([FakeResponse(bankier_payload(dates, navs))])
     df = fetch_quotes("AGF04", "fund", session)
-    assert len(df) > 0
-    assert df["close"].iloc[0] == pytest.approx(50.0)
+    assert len(df) < 400  # trimmed to the last 365 calendar days
+    assert df["date"].ge((pd.Timestamp.now().normalize() - pd.Timedelta(days=365)).strftime("%Y-%m-%d")).all()
+    assert df["close"].iloc[-1] == pytest.approx(69.95)  # 50.0 + 399*0.05
 
 
 def test_unknown_symbol_reported_not_fatal(tmp_path, watchlist):
