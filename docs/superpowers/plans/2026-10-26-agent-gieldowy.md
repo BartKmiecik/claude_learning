@@ -102,7 +102,7 @@ dependencies = [
     "feedparser>=6.0",
     "pyyaml>=6.0",
     "plotly>=5.18",
-    "anthropic>=1.0",
+    "anthropic>=2.0",
 ]
 
 [project.optional-dependencies]
@@ -904,6 +904,7 @@ Expected: FAIL — `ModuleNotFoundError: No module named 'agent_gieldowy.news'`
 """Recent financial headlines from RSS feeds (bankier.pl, money.pl fallback)."""
 
 import json
+import time
 from pathlib import Path
 
 import feedparser
@@ -919,8 +920,12 @@ NEWS_FEEDS = [
 def fetch_news(feed_urls, limit: int = 20, session=None) -> list:
     """Latest `limit` items across feeds as [{'title', 'published', 'link'}].
 
-    A failing feed is skipped — one dead feed must not kill collect.
+    Feeds are merged and sorted newest-first by their published timestamp
+    (real feeds are newest-first — taking the tail would keep the OLDEST);
+    a failing feed is skipped — one dead feed must not kill collect.
     """
+    if limit <= 0:
+        return []
     items = []
     for url in feed_urls:
         try:
@@ -934,9 +939,14 @@ def fetch_news(feed_urls, limit: int = 20, session=None) -> list:
                     "title": entry.get("title", ""),
                     "published": entry.get("published", ""),
                     "link": entry.get("link", ""),
+                    "_published_parsed": entry.get("published_parsed"),
                 }
             )
-    return items[-limit:] if len(items) > limit else items
+    oldest = time.struct_time((1900, 1, 1, 0, 0, 0, 0, 0, -1))
+    items.sort(key=lambda item: item["_published_parsed"] or oldest, reverse=True)
+    for item in items:
+        item.pop("_published_parsed")
+    return items[:limit]
 
 
 def save_news(items: list, data_dir) -> None:
@@ -1591,6 +1601,18 @@ def default_model() -> str:
     return os.environ.get("AGENT_GIELDOWY_MODEL", "claude-opus-5-5")
 
 
+def make_client():
+    """Construct the Anthropic client, translating a broken-credentials file
+    into the Polish guidance (SDK 2.x raises CredentialsError at construction)."""
+    try:
+        return anthropic.Anthropic()
+    except anthropic.CredentialsError as exc:
+        raise AgentError(
+            "brak poprawnych danych uwierzytelniających Claude API — uruchom `ant auth login` "
+            "albo ustaw zmienną ANTHROPIC_API_KEY"
+        ) from exc
+
+
 def fmt(value, pct: bool = False) -> str:
     if value is None or (isinstance(value, float) and math.isnan(value)):
         return "—"
@@ -1655,7 +1677,7 @@ def validate_prediction(prediction: dict, watchlist_symbols: list) -> list:
 
 def analyze(persona_prompt: str, user_message: str, watchlist_symbols: list, client=None, model=None) -> dict:
     """Validated prediction dict with generated_at; retries once on any failure."""
-    client = client or anthropic.Anthropic()
+    client = client or make_client()
     model = model or default_model()
     last_error = None
     for attempt in range(2):
@@ -1998,7 +2020,7 @@ def compute_actual_changes(watchlist: dict, since_date, data_dir) -> dict:
 def reflect(prediction: dict, outcomes: dict, client, model, persona_prompt: str) -> str:
     import anthropic
 
-    client = client or anthropic.Anthropic()
+    client = client or make_client()
     model = model or default_model()
     user_message = (
         f"Twoja prognoza z {prediction['generated_at']}:\n"
@@ -2028,6 +2050,7 @@ def evaluate(entries_path, data_dir, watchlist, client=None, model=None, persona
             patch["reflection"] = reflect(entry["prediction"], outcomes, client, model, persona_prompt)
         except (AgentError, Exception) as exc:  # noqa: BLE001 — reflection is best-effort
             patch["reflection"] = None
+            print(f"Uwaga: refleksja agenta nie powiodła się: {exc}", file=sys.stderr)
         update_entry(entries_path, entry["id"], patch)
         processed += 1
     return processed
@@ -2309,10 +2332,17 @@ def render_report(watchlist: dict, data_dir, persona_path, entries_path, out_pat
         parts.append(_signals_table(compute_signals(df)))
     parts.append("<h2>Analiza agenta</h2>")
     if latest and latest.get("prediction"):
-        persona = load_persona(persona_path)
+        try:
+            persona = load_persona(persona_path)
+        except Exception:  # noqa: BLE001 — persona is editable config; never crash the report
+            persona = {}
+        name = persona.get("name", "Anonimowy analityk")
+        profession = persona.get("profession", "analityk finansowy")
+        city = persona.get("city", "Polska")
+        biases = persona.get("biases") or []
         parts.append(
-            f"<p><strong>{html.escape(persona['name'])}</strong> — {html.escape(persona['profession'])}, "
-            f"{html.escape(persona['city'])}. Skłonności: {', '.join(html.escape(b) for b in persona['biases'])}.</p>"
+            f"<p><strong>{html.escape(name)}</strong> — {html.escape(profession)}, "
+            f"{html.escape(city)}. Skłonności: {', '.join(html.escape(b) for b in biases)}.</p>"
         )
         parts.append(_prediction_table(latest["prediction"]))
         parts.append("<h3>Ryzyka</h3><ul>")
