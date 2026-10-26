@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from types import SimpleNamespace
 
 import anthropic
@@ -134,7 +135,7 @@ def test_analyze_returns_prediction_with_generated_at():
     client = FakeClient([valid_prediction()])
     result = analyze("prompt", "msg", ["PKO.WA"], client=client)
     assert result["horizon"] == "1M"
-    assert result["generated_at"].startswith("2026")
+    assert datetime.fromisoformat(result["generated_at"])
     call = client.messages.calls[0]
     assert call["model"] == "claude-opus-5-5"
     assert call["system"] == "prompt"
@@ -196,6 +197,18 @@ def test_analyze_translates_sdk_no_credentials_typeerror():
     client = FakeClient([no_creds])
     with pytest.raises(AgentError) as exc:
         analyze("p", "m", ["PKO.WA"], client=client)
+    assert "ant auth login" in str(exc.value)
+
+
+def test_analyze_translates_sdk_credentials_error(monkeypatch):
+    err = anthropic.CredentialsError.__new__(anthropic.CredentialsError)
+
+    def boom(**kwargs):
+        raise err
+
+    monkeypatch.setattr(anthropic, "Anthropic", boom)
+    with pytest.raises(AgentError) as exc:
+        analyze("p", "m", ["PKO.WA"], client=None)
     assert "ant auth login" in str(exc.value)
 
 

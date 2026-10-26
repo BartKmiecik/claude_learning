@@ -117,10 +117,19 @@ def render_report(
         parts.append(_signals_table(compute_signals(df)))
     parts.append("<h2>Analiza agenta</h2>")
     if latest and latest.get("prediction"):
-        persona = load_persona(persona_path)
+        try:
+            persona = load_persona(persona_path)
+        except (
+            Exception
+        ):  # noqa: BLE001 — persona is editable config; never crash the report
+            persona = {}
+        name = persona.get("name", "Anonimowy analityk")
+        profession = persona.get("profession", "analityk finansowy")
+        city = persona.get("city", "Polska")
+        biases = persona.get("biases") or []
         parts.append(
-            f"<p><strong>{html.escape(persona['name'])}</strong> — {html.escape(persona['profession'])}, "
-            f"{html.escape(persona['city'])}. Skłonności: {', '.join(html.escape(b) for b in persona['biases'])}.</p>"
+            f"<p><strong>{html.escape(name)}</strong> — {html.escape(profession)}, "
+            f"{html.escape(city)}. Skłonności: {', '.join(html.escape(b) for b in biases)}.</p>"
         )
         parts.append(_prediction_table(latest["prediction"]))
         parts.append("<h3>Ryzyka</h3><ul>")

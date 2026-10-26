@@ -65,6 +65,18 @@ def default_model() -> str:
     return os.environ.get("AGENT_GIELDOWY_MODEL", "claude-opus-5-5")
 
 
+def make_client():
+    """Construct the Anthropic client, translating a broken-credentials file
+    into the Polish guidance (SDK 2.x raises CredentialsError at construction)."""
+    try:
+        return anthropic.Anthropic()
+    except anthropic.CredentialsError as exc:
+        raise AgentError(
+            "brak poprawnych danych uwierzytelniających Claude API — uruchom `ant auth login` "
+            "albo ustaw zmienną ANTHROPIC_API_KEY"
+        ) from exc
+
+
 def fmt(value, pct: bool = False) -> str:
     if value is None or (isinstance(value, float) and math.isnan(value)):
         return "—"
@@ -140,7 +152,7 @@ def analyze(
     model=None,
 ) -> dict:
     """Validated prediction dict with generated_at; retries once on any failure."""
-    client = client or anthropic.Anthropic()
+    client = client or make_client()
     model = model or default_model()
     last_error = None
     for attempt in range(2):

@@ -156,3 +156,16 @@ def test_report_escapes_llm_and_news_text(data_dir, persona_path, tmp_path, watc
     assert "&lt;script&gt;" in html_out
     assert "<script>alert" not in html_out
     assert "&lt;b&gt;Nagłówek&lt;/b&gt;" in html_out
+
+
+def test_report_missing_persona_renders_placeholder(data_dir, tmp_path, watchlist):
+    entries_path = tmp_path / "journal" / "entries.jsonl"
+    stored = append_entry(entries_path, {"prediction": prediction()})
+    entries_path.write_text(
+        json.dumps(stored, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    out = tmp_path / "report.html"
+    render_report(watchlist, data_dir, tmp_path / "nieistnieje.yaml", entries_path, out)
+    html_out = out.read_text(encoding="utf-8")
+    assert "Anonimowy analityk" in html_out
+    assert "Pełna analiza." in html_out

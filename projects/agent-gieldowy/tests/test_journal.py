@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 import pytest
 
@@ -40,7 +41,7 @@ def make_entry(prediction=None):
 def test_append_adds_id_and_created_at(entries_path):
     stored = append_entry(entries_path, make_entry())
     assert stored["id"]
-    assert stored["created_at"].startswith("2026")
+    assert datetime.fromisoformat(stored["created_at"])
     lines = entries_path.read_text(encoding="utf-8").strip().splitlines()
     assert len(lines) == 1
     assert json.loads(lines[0]) == stored

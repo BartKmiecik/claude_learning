@@ -13,7 +13,7 @@ dependencies = [
     "feedparser>=6.0",
     "pyyaml>=6.0",
     "plotly>=5.18",
-    "anthropic>=1.0",
+    "anthropic>=2.0",
 ]
 
 [project.optional-dependencies]

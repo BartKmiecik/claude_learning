@@ -1,11 +1,12 @@
 """Score predictions older than 30 days against reality; let the agent reflect."""
 
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pandas as pd
 
-from agent_gieldowy.agent import AgentError, default_model
+from agent_gieldowy.agent import AgentError, default_model, make_client
 from agent_gieldowy.config import all_symbols
 from agent_gieldowy.journal import read_entries, update_entry
 
@@ -79,9 +80,7 @@ def compute_actual_changes(watchlist: dict, since_date, data_dir) -> dict:
 def reflect(
     prediction: dict, outcomes: dict, client, model, persona_prompt: str
 ) -> str:
-    import anthropic
-
-    client = client or anthropic.Anthropic()
+    client = client or make_client()
     model = model or default_model()
     user_message = (
         f"Twoja prognoza z {prediction['generated_at']}:\n"
@@ -120,6 +119,7 @@ def evaluate(
             Exception,
         ) as exc:  # noqa: BLE001 — reflection is best-effort
             patch["reflection"] = None
+            print(f"Uwaga: refleksja agenta nie powiodła się: {exc}", file=sys.stderr)
         update_entry(entries_path, entry["id"], patch)
         processed += 1
     return processed
