@@ -1053,8 +1053,8 @@ def test_build_digest_compacts_older_entries(entries_path):
     older = digest["older"][0]
     assert older["directions"] == {"SYM0.WA": "down"}
     assert older["reflection"] == "refleksja 0"
-    assert "analysis" not in older  # compacted away
-    assert "analysis" in digest["recent"][0]  # recent entries stay full
+    assert "prediction" not in older  # compacted away
+    assert "analysis" in digest["recent"][0]["prediction"]  # recent entries stay full
 ```
 
 - [ ] **Step 2: Run the tests to verify they fail**
