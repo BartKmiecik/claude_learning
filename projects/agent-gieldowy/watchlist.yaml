@@ -1,0 +1,12 @@
+# Watchlista agenta giełdowego. Symbole zweryfikowane 2026-10-26.
+stocks:
+  - PKO.WA
+  - PZU.WA
+  - PKN.WA
+indices:
+  - WIG20.WA
+  - WIG.WA
+  - MWIG40.WA
+funds:
+  - AGF04  # AGIO Kapitał
+  - AGF44  # AGIO Akcji PLUS
