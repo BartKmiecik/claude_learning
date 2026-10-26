@@ -1219,7 +1219,7 @@ def test_render_tolerates_missing_fields(tmp_path):
 def test_shipped_persona_renders_all_sections():
     import agent_gieldowy
 
-    persona_path = Path(agent_gieldowy.__file__).parent.parent / "persona.yaml"
+    persona_path = Path(agent_gieldowy.__file__).parent.parent.parent / "persona.yaml"
     persona = load_persona(persona_path)
     prompt = render_system_prompt(persona)
     for key in ("name", "age", "city", "profession", "social_position", "education", "temperament", "style"):
@@ -2509,7 +2509,7 @@ from agent_gieldowy.persona import load_persona, render_system_prompt
 from agent_gieldowy.report import render_report
 from agent_gieldowy.signals import compute_signals
 
-PROJECT_DIR = Path(__file__).resolve().parent.parent
+PROJECT_DIR = Path(__file__).resolve().parent.parent.parent  # src/agent_gieldowy/cli.py → project root
 
 
 def _data_dir() -> Path:
