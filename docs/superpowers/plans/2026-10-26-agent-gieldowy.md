@@ -1500,6 +1500,21 @@ def test_analyze_wraps_auth_error_with_instruction():
     assert "ant auth login" in str(exc.value)
 
 
+def test_analyze_translates_sdk_no_credentials_typeerror():
+    no_creds = TypeError("Could not resolve authentication method. Expected one of api_key, auth_token, or credentials to be set.")
+    client = FakeClient([no_creds])
+    with pytest.raises(AgentError) as exc:
+        analyze("p", "m", ["PKO.WA"], client=client)
+    assert "ant auth login" in str(exc.value)
+
+
+def test_analyze_reraises_unrelated_typeerror():
+    unrelated = TypeError("unsupported operand type(s)")
+    client = FakeClient([unrelated])
+    with pytest.raises(TypeError):
+        analyze("p", "m", ["PKO.WA"], client=client)
+
+
 def test_analyze_parses_garbage_then_retries():
     garbage = SimpleNamespace(content=[SimpleNamespace(type="text", text="not-json {")])
     client = FakeClient([garbage, valid_prediction()])
@@ -1656,6 +1671,17 @@ def analyze(persona_prompt: str, user_message: str, watchlist_symbols: list, cli
             last_error = exc
             time.sleep(2 * (attempt + 1))
             continue
+        except TypeError as exc:
+            # SDK 2.x raises a client-side TypeError (not AuthenticationError)
+            # when no credentials resolve — translate to the Polish guidance;
+            # any other TypeError is a programming error and must propagate.
+            message = str(exc).lower()
+            if "authentication" in message or "credentials" in message:
+                raise AgentError(
+                    "brak danych uwierzytelniających Claude API — uruchom `ant auth login` "
+                    "albo ustaw zmienną ANTHROPIC_API_KEY"
+                ) from exc
+            raise
         except anthropic.APIConnectionError as exc:
             raise AgentError(f"brak połączenia z API: {exc}") from exc
         except anthropic.AuthenticationError as exc:
