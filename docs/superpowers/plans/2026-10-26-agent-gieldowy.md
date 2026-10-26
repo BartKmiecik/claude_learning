@@ -2412,9 +2412,14 @@ def test_collect_calls_collector(project_files, monkeypatch):
 
 def test_collect_partial_failure_warns_but_exits_0(project_files, monkeypatch, capsys):
     # Review Focus #1: one dead symbol must not halt the pipeline
+    (project_files / "watchlist.yaml").write_text(
+        "stocks:\n  - PKO.WA\n  - PZU.WA\nindices: []\nfunds: []\n", encoding="utf-8"
+    )
+
     def fake_collect(watchlist, data_dir, session=None):
         return {
             "PKO.WA": {"status": "error", "error": "Yahoo has no data for PKO.WA"},
+            "PZU.WA": {"status": "ok", "rows": 1, "appended": 1},
         }
 
     monkeypatch.setattr(cli, "collect", fake_collect)
@@ -2434,6 +2439,10 @@ def test_collect_all_failed_exits_1(project_files, monkeypatch, capsys):
 
 
 def test_analyze_runs_agent_and_appends_journal_entry(project_files, monkeypatch):
+    (project_files / "data").mkdir(exist_ok=True)
+    (project_files / "data" / "PKO.WA.csv").write_text(
+        "date,close\n2026-10-01,100.0\n2026-10-02,101.0\n", encoding="utf-8"
+    )
     monkeypatch.setattr(cli, "read_entries", lambda p: [])
     monkeypatch.setattr(cli, "build_digest", lambda entries: {"recent": [], "older": [], "total_entries": 0})
     monkeypatch.setattr(cli, "compute_signals", lambda df: {"return_1m": 0.01})
@@ -2572,7 +2581,7 @@ def _persona_path() -> Path:
     return PROJECT_DIR / "persona.yaml"
 
 
-def _load_news_items(path: Path) -> list:
+def load_news_items(path: Path) -> list:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
@@ -2615,7 +2624,7 @@ def cmd_analyze(args) -> int:
         return 1
     entries = read_entries(_entries_path())
     digest = build_digest(entries)
-    news_items = _load_news_items(_data_dir() / "news.json")
+    news_items = load_news_items(_data_dir() / "news.json")
     persona = load_persona(_persona_path())
     user_message = build_user_message(
         build_signals_table(signals), news_items, digest, symbols
