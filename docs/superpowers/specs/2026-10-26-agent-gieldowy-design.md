@@ -33,7 +33,7 @@ The tool collects daily prices from the last 12 months, runs a persona-driven ag
 
 - **Language/stack:** Python CLI project, repo conventions from Project 1: venv, TDD (pytest), black hook, one commit per task. Lives in `projects/agent-gieldowy/`.
 - **Market:** Polish only — GPW stocks, WIG indices, TFI funds.
-- **Data source:** stooq.pl (free, no API key) as primary; RSS (bankier.pl) for news.
+- **Data sources** (probe-verified 2026-10-26; stooq.pl is bot-gated — even solving its PoW challenge returns "Odmowa dostępu", so it was dropped): Yahoo chart API v8 for GPW stocks/indices (`https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?range=2y&interval=1d`, `.WA` symbols, `User-Agent` header required, no key); public bankier.pl API for TFI fund NAVs (`https://api.bankier.pl/quotes/public/bankier-tfi/bankier-fund-chart-data?symbol={symbol}`); RSS (bankier.pl) for news. Yahoo and bankier are unofficial APIs — acceptable for a training project; they may change without notice.
 - **Claude API:** official `anthropic` SDK, default model **`claude-opus-5-5`** (config-switchable, e.g. to a cheaper model, without code changes). Auth via the zero-arg client (resolves `ant auth login` profile or `ANTHROPIC_API_KEY`); missing credentials produce a clear instructional error, never a crash dump.
 - **Cost:** one `analyze` run = 1 compact LLM call (signals + news + journal digest for ~8 instruments); one `evaluate` reflection = 1 small call. Cents per run at opus-5-5 pricing.
 - **Storage:** flat files — `data/<symbol>.csv` + `data/news.json` + `journal/entries.jsonl`. No database (YAGNI: 12 months of daily data ≈ 250 rows per instrument).
@@ -41,8 +41,9 @@ The tool collects daily prices from the last 12 months, runs a persona-driven ag
 ## 5. Architecture
 
 ```
-stooq.pl ──> [collector] ──> data/*.csv ──> [signals] ──┐
-RSS news ──> [news] ────────> data/news.json ──────────┤
+Yahoo API (stocks/indices) ─┐
+bankier API (funds) ────────┼─> [collector] ──> data/*.csv ──> [signals] ──┐
+RSS news ───────────────────┘                                             │
                                                        ▼
    journal/entries.jsonl (past) <── [agent: persona + Claude API] ──> prediction JSON
                                                        │
@@ -53,7 +54,7 @@ Modules (each a separate Python module, independently testable):
 
 | Module | Responsibility | Depends on |
 |---|---|---|
-| `collector` | Downloads 12 months of daily quotes from stooq.pl for every instrument in `watchlist.yaml` → `data/<symbol>.csv`; incremental (appends only new days) | — |
+| `collector` | Downloads 12 months of daily quotes — Yahoo (stocks/indices) and bankier.pl (funds) — for every instrument in `watchlist.yaml` → `data/<symbol>.csv`; incremental (appends only new days) | — |
 | `news` | Downloads recent RSS headlines (bankier.pl giełda/gospodarka) → `data/news.json` | — |
 | `signals` | Pure functions over a DataFrame: 1/3/12-month returns, annualized volatility, momentum, SMA50/200 + golden cross, RSI14, max drawdown | pandas |
 | `persona` | Loads `persona.yaml` and renders the system prompt | — |
@@ -66,9 +67,11 @@ Modules (each a separate Python module, independently testable):
 ### 6.1 collector
 
 - Instruments come from `watchlist.yaml` with sections `stocks:`, `indices:`, `funds:` (defaults in §12).
-- Stooq daily CSV endpoint: `https://stooq.pl/q/d/l/?s=SYMBOL&i=d` returns full history — download, trim to the last 365 calendar days.
+- Stocks/indices: Yahoo chart API v8, `https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?range=2y&interval=1d` (JSON; `User-Agent` header required; empty `chart.result` = unknown symbol). Symbols carry the `.WA` suffix (`PKO.WA`, `WIG20.WA`, `MWIG40.WA`).
+- Funds: bankier public API, `https://api.bankier.pl/quotes/public/bankier-tfi/bankier-fund-chart-data?symbol={symbol}` (JSON: `data[0].data` = list of `[epoch_ms, nav]`). Bankier fund symbols are short codes (e.g. `AGF04` = AGIO Kapitał); more are discoverable at `https://www.bankier.pl/fundusze/notowania/wszystkie`.
+- Both normalize to a common DataFrame (`date`, `close`) → `data/<symbol>.csv`; trim to the last 365 calendar days.
 - Incremental: compare the last local date with the downloaded data; append only new rows.
-- Gaps (suspensions, no session): forward-fill with a marker; signals are computed on a common trading calendar.
+- Gaps (suspensions, no session) are simply absent from the frame; signals are computed on the observed dates (`pct_change`/`rolling` tolerate gaps). No forward-fill — fabricating prices adds complexity without value for a training project.
 
 ### 6.2 news
 
@@ -157,7 +160,7 @@ Structured output, one-month horizon:
 
 ## 9. Error Handling
 
-- **stooq / RSS:** timeout + 2 retries, then a warning and continue with partial data — `collect` never dies because one source failed; the report marks gaps.
+- **Data sources (Yahoo / bankier / RSS):** timeout + 2 retries, then a warning and continue with partial data — `collect` never dies because one source failed; the report marks gaps.
 - **Claude API:** typed exception chain — `RateLimitError` → retry with backoff; `APIStatusError` / `APIConnectionError` → readable message; missing credentials → instruction (`ant auth login` or `ANTHROPIC_API_KEY`).
 - **Agent failure during `analyze`:** non-zero exit with a clear message; signals are already on disk, so a retry refetches nothing. The report renders without the agent section.
 
@@ -182,16 +185,16 @@ TDD per repo convention. **No live API calls in tests.**
 
 ## 12. Defaults
 
-- **Watchlist** (editable in `watchlist.yaml`): indices WIG20, WIG, mWIG40; stocks PKO, PZU, PKN; funds — 2–3 TFI funds (symbols TBD, see §13).
+- **Watchlist** (editable in `watchlist.yaml`, symbols probe-verified 2026-10-26): indices `WIG20.WA`, `WIG.WA`, `MWIG40.WA`; stocks `PKO.WA`, `PZU.WA`, `PKN.WA`; funds `AGF04` (AGIO Kapitał), `AGF44` (AGIO Akcji PLUS).
 - **Persona:** as described in §6.4.
 
 ## 13. Open Implementation Points
 
-These are deliberate decision points for the implementation plan (spikes where needed), not gaps:
+These are deliberate decision points for the implementation plan, not gaps:
 
-1. **Stooq fund symbols** — verify the exact stooq.pl symbol format for TFI funds (spike in the plan); fallback: bankier.pl / analizy.pl fund pages.
-2. **Persona copy** — author the default persona YAML during implementation.
-3. **Watchlist contents** — confirm the default instrument list with the user during implementation.
+1. **Persona copy** — author the default persona YAML during implementation.
+2. **Watchlist contents** — confirm the default instrument list with the user during implementation (defaults in §12 are probe-verified).
+3. **Unofficial API risk** — Yahoo and bankier endpoints are unofficial; if one changes, the collector is isolated so only `collector.py` needs a fix (a new source adapter behind the same DataFrame interface).
 
 ## 14. Out of Scope
 
