@@ -1386,6 +1386,8 @@ class FakeMessages:
         payload = self.payloads.pop(0)
         if isinstance(payload, Exception):
             raise payload
+        if isinstance(payload, SimpleNamespace):
+            return payload  # an already-built response (e.g. garbage text)
         text = json.dumps(payload)
         return SimpleNamespace(content=[SimpleNamespace(type="text", text=text)])
 
