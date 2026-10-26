@@ -106,7 +106,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = ["pytest>=8.0", "black>=24.0"]
 
 [project.scripts]
 agent-gieldowy = "agent_gieldowy.cli:main"
@@ -131,6 +131,7 @@ markers = ["live: live smoke tests — run manually with `pytest -m live`"]
 data/
 journal/
 __pycache__/
+.pytest_cache/
 *.egg-info/
 report.html
 ```
@@ -184,7 +185,7 @@ Konfiguracja: `watchlist.yaml`, `persona.yaml`; model przez zmienną środowisko
         "hooks": [
           {
             "type": "command",
-            "command": "python -c \"import subprocess, sys; subprocess.run([sys.executable, '-m', 'black', 'src', 'tests'], cwd=r'projects/agent-gieldowy', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); raise SystemExit(0)\""
+            "command": "python -c \"import subprocess, sys; subprocess.run(['.venv/Scripts/python.exe', '-m', 'black', 'src', 'tests'], cwd=r'projects/agent-gieldowy', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); raise SystemExit(0)\""
           }
         ]
       }
