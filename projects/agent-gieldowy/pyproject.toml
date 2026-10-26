@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-gieldowy"
+version = "0.1.0"
+description = "Training project: Polish market data pipeline + persona-driven LLM market analyst"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.0",
+    "requests>=2.31",
+    "feedparser>=6.0",
+    "pyyaml>=6.0",
+    "plotly>=5.18",
+    "anthropic>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "black>=24.0"]
+
+[project.scripts]
+agent-gieldowy = "agent_gieldowy.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-m 'not live'"
+markers = ["live: live smoke tests — run manually with `pytest -m live`"]
