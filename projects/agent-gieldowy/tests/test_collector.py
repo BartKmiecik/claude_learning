@@ -80,6 +80,21 @@ def test_unknown_symbol_reported_not_fatal(tmp_path, watchlist):
     assert results["AGF04"]["status"] == "ok"
 
 
+def test_malformed_payload_reported_not_fatal(tmp_path, watchlist):
+    # A malformed payload (unknown/renamed fund shape) must not abort the batch
+    session = FakeSession(
+        [
+            FakeResponse(yahoo_payload(bdate_range(400), [100.0] * 400)),  # PKO.WA ok
+            FakeResponse(yahoo_payload(bdate_range(400), [200.0] * 400)),  # WIG20.WA ok
+            FakeResponse({"data": []}),  # AGF04 malformed
+        ]
+    )
+    results = collect(watchlist, tmp_path / "data", session)
+    assert results["AGF04"]["status"] == "error"
+    assert results["PKO.WA"]["status"] == "ok"
+    assert results["WIG20.WA"]["status"] == "ok"
+
+
 def test_incremental_no_duplicates(tmp_path):
     # Review Focus #2: collecting twice on the same day appends nothing new
     dates = bdate_range(400)

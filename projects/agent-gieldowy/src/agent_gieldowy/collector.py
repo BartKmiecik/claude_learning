@@ -56,7 +56,9 @@ def fetch_quotes(symbol: str, kind: str, session=None) -> pd.DataFrame:
     if kind == "fund":
         resp = http_get(BANKIER_URL, params={"symbol": symbol}, session=session)
         payload = resp.json()
-        rows = payload["data"][0]["data"]  # [[epoch_ms, nav], ...]
+        rows = ((payload.get("data") or [{}])[0] or {}).get(
+            "data", []
+        )  # [[epoch_ms, nav], ...]
         if not rows:
             raise UnknownSymbolError(f"bankier returned no data for {symbol}")
         df = pd.DataFrame(rows, columns=["epoch_ms", "close"])
@@ -111,6 +113,7 @@ def collect(watchlist: dict, data_dir, session=None) -> dict:
                 "rows": len(df),
                 "appended": appended,
             }
-        except CollectorError as exc:
+        # one failing symbol never aborts the others (spec §6.1/§9) — malformed payloads surface as ValueError/KeyError/IndexError
+        except (CollectorError, ValueError, KeyError, IndexError) as exc:
             results[item["symbol"]] = {"status": "error", "error": str(exc)}
     return results
