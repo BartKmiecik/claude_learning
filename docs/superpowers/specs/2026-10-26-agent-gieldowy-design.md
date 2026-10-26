@@ -173,7 +173,7 @@ TDD per repo convention. **No live API calls in tests.**
 - `journal` — append / read / digest / scoring.
 - `agent` — mocked Anthropic client: verifies prompt assembly (persona + signals + digest) and parsing/rejection of responses (valid, malformed, refused).
 - `report` — generation test (sections present, no exceptions).
-- Optional live smoke test behind `--live` (manual only).
+- Optional live smoke tests behind the pytest `live` marker, deselected by default (manual only: `pytest -m live`).
 
 ## 11. Report Layout
 

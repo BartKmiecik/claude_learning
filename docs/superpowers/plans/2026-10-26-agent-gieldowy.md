@@ -184,7 +184,7 @@ Konfiguracja: `watchlist.yaml`, `persona.yaml`; model przez zmienną środowisko
         "hooks": [
           {
             "type": "command",
-            "command": "python -c \"import subprocess, sys; subprocess.run([sys.executable, '-m', 'black', 'src', 'tests'], cwd=r'C:\\Users\\user\\Projects\\Python\\pythonProject\\projects\\agent-gieldowy', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); raise SystemExit(0)\""
+            "command": "python -c \"import subprocess, sys; subprocess.run([sys.executable, '-m', 'black', 'src', 'tests'], cwd=r'projects/agent-gieldowy', stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL); raise SystemExit(0)\""
           }
         ]
       }
