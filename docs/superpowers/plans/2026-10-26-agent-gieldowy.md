@@ -1743,7 +1743,7 @@ Co-Authored-By: Claude Code <noreply@anthropic.com>"
   - `evaluate.score_direction(pred_dir: str, actual_pct: float) -> bool` — up = `> 0`, down = `< 0`, sideways = `|actual| ≤ 2.0`.
   - `evaluate.score_range(range_pct: dict, actual_pct: float) -> bool` — `min ≤ actual ≤ max`.
   - `evaluate.score_entry(entry: dict, actual_changes: dict) -> dict` — per symbol `{"scored", "actual_pct", "direction_hit", "range_hit"}`; unscored when no actual data.
-  - `evaluate.find_due_entries(entries: list, min_age_days: int = 30) -> list[dict]` — entries with `outcomes is None` and `created_at` older than the cutoff.
+  - `evaluate.find_due_entries(entries: list, min_age_days: int = 30) -> list[dict]` — entries with `outcomes is None` and `prediction.generated_at` older than the cutoff.
   - `evaluate.compute_actual_changes(watchlist: dict, since_date, data_dir) -> dict[str, float]` — pct change (0–100 scale) from the first close at/after `since_date` to the latest close, per symbol with data.
   - `evaluate.reflect(prediction: dict, outcomes: dict, client, model, persona_prompt: str) -> str` — 1–2 sentence Polish reflection (free text, max_tokens=1000).
   - `evaluate.evaluate(entries_path, data_dir, watchlist, client=None, model=None, persona_prompt="") -> int` — processes due entries, writes `outcomes` (+ `reflection` when the LLM call succeeds), returns the number of processed entries. Idempotent. Consumed by cli.py (Task 10).
@@ -1968,7 +1968,7 @@ def find_due_entries(entries: list, min_age_days: int = 30) -> list:
         if e.get("outcomes") is not None:
             continue
         try:
-            created = datetime.fromisoformat(e["created_at"])
+            created = datetime.fromisoformat(e["prediction"]["generated_at"])
         except (KeyError, ValueError):
             continue
         if created <= cutoff:
@@ -2038,7 +2038,7 @@ Note for the implementer: the bare `Exception` in the last `except` is deliberat
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `.venv/Scripts/python -m pytest tests/test_evaluate.py -v`
-Expected: PASS (9 tests)
+Expected: PASS (8 tests)
 
 - [ ] **Step 5: Commit**
 
@@ -2673,7 +2673,7 @@ Run: `.venv/Scripts/python -m pytest tests/test_cli.py -v`
 Expected: PASS (8 tests)
 
 Run: `.venv/Scripts/python -m pytest` — the full suite (live tests excluded by the `addopts` marker filter).
-Expected: PASS with **zero failures** (count: 7 signals + 7 collector + 4 news + 5 journal + 2 persona + 11 agent + 9 evaluate + 3 report + 9 cli = 57; live tests are deselected by `-m 'not live'`, not counted).
+Expected: PASS with **zero failures** (count: 7 signals + 8 collector + 4 news + 5 journal + 4 persona + 13 agent + 8 evaluate + 3 report + 9 cli = 61; live tests are deselected by `-m 'not live'`, not counted).
 
 - [ ] **Step 5: Verify the entry point works end to end with mocked-free commands**
 
