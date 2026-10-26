@@ -167,12 +167,6 @@ def analyze(
             ) from exc
         except anthropic.APIStatusError as exc:
             raise AgentError(f"błąd API ({exc.status_code}): {exc.message}") from exc
-        except TypeError as exc:
-            # Serialization/type failure inside the client call (an unserializable
-            # payload raises TypeError, not JSONDecodeError): treat it like an
-            # invalid response and retry, per the brief's note on catching both.
-            last_error = exc
-            continue
         try:
             text = "".join(
                 block.text for block in response.content if block.type == "text"

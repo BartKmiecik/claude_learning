@@ -45,6 +45,11 @@ class FakeMessages:
         payload = self.payloads.pop(0)
         if isinstance(payload, Exception):
             raise payload
+        if isinstance(payload, SimpleNamespace):
+            # A pre-built fake response (e.g. unparseable text) passes through
+            # unchanged — a garbage response arrives as text to parse, not as
+            # an exception raised while building the call.
+            return payload
         text = json.dumps(payload)
         return SimpleNamespace(content=[SimpleNamespace(type="text", text=text)])
 
@@ -184,9 +189,7 @@ def test_analyze_wraps_auth_error_with_instruction():
 
 
 def test_analyze_parses_garbage_then_retries():
-    class Garbage:
-        pass
-
-    client = FakeClient([Garbage(), valid_prediction()])
+    garbage = SimpleNamespace(content=[SimpleNamespace(type="text", text="not-json {")])
+    client = FakeClient([garbage, valid_prediction()])
     result = analyze("p", "m", ["PKO.WA"], client=client)
     assert result["predictions"][0]["symbol"] == "PKO.WA"
