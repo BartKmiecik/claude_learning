@@ -1,0 +1,5 @@
+.venv/
+data/
+predictions/
+report/
+__pycache__/
