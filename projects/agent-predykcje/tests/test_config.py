@@ -1,4 +1,6 @@
+import pytest
 import yaml
+
 from agent_predykcje.config import all_symbols, load_watchlist, persona_paths
 
 
@@ -10,6 +12,13 @@ def test_load_watchlist_reads_stocks_and_indices(tmp_path):
     w = load_watchlist(path)
     assert w["stocks"] == ["PKO.WA", "PZU.WA"]
     assert w["indices"] == ["WIG.WA"]
+
+
+def test_load_watchlist_empty_file_raises_yaml_error(tmp_path):
+    path = tmp_path / "watchlist.yaml"
+    path.write_text("", encoding="utf-8")  # safe_load -> None
+    with pytest.raises(yaml.YAMLError):
+        load_watchlist(path)
 
 
 def test_all_symbols_flattens_in_section_order():

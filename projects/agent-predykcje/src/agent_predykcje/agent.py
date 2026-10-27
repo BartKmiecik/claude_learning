@@ -68,26 +68,33 @@ def _signals_line(symbol: str, s: dict) -> str:
         f"zmienność roczna {fmt(s['annualized_volatility'], pct=True)}, RSI14 {fmt(s['rsi14'])}, "
         f"SMA50 {fmt(s['sma50'])}, SMA200 {fmt(s['sma200'])}, "
         f"maxDD {fmt(s['max_drawdown'], pct=True)}, "
-        f"SMA50>SMA200 {s['sma50_above_sma200']}, "
+        f"SMA50>SMA200 {fmt(s['sma50_above_sma200'])}, "
         f"goldenCross {s['golden_cross_recent']}, deathCross {s['death_cross_recent']}"
     )
 
 
 def build_user_message(
-    symbol: str, anchor: dict, signals: dict, index_signals: dict, news_items: list
+    symbol: str,
+    anchor: dict,
+    signals: dict,
+    index_signals: dict,
+    news_items: list,
+    recent_prices: list | None = None,
 ) -> str:
-    """Polish prompt: market data, index context, news headlines, and the task."""
+    """Polish prompt: price history, market data, index context, news, task."""
     index_lines = "\n".join(_signals_line(sym, s) for sym, s in index_signals.items())
     news = (
         "\n".join(f"- {n['title']} ({n['published']})" for n in news_items)
         or "- (brak)"
     )
+    history = "\n".join(recent_prices) if recent_prices else "—"
     return (
         f"DANE RYNKOWE:\n"
         f"Symbol: {symbol}\n"
         f"Cena: {fmt(anchor['price'])} zł\n"
         f"Data: {anchor['date']}\n"
-        f"{_signals_line(symbol, signals)}\n\n"
+        f"{_signals_line(symbol, signals)}\n"
+        f"HISTORIA CEN (ostatnie sesje):\n{history}\n\n"
         f"KONTEKST INDEKSÓW:\n{index_lines}\n\n"
         f"NAJNOWSZE NAGŁÓWKI:\n{news}\n\n"
         f"ZADANIE: Przewidź cenę akcji {symbol} w trzech horyzontach: "

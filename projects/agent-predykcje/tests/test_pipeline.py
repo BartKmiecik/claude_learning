@@ -1,8 +1,11 @@
+from datetime import datetime, timedelta
+
 import pandas as pd
 import pytest
 
 from agent_predykcje.agent import AgentError
 from agent_predykcje.pipeline import (
+    _price_history_lines,
     anchor_of,
     latest_snapshot,
     load_price_frame,
@@ -193,14 +196,28 @@ def test_save_load_snapshot_roundtrip(tmp_path):
 
 
 def test_latest_snapshot_picks_newest(tmp_path):
-    save_snapshot({"created_at": "1", "model": "m", "stocks": []}, tmp_path)
-    (tmp_path / "predictions-20260101-000000.json").write_text(
-        '{"created_at": "2"}', encoding="utf-8"
+    first = save_snapshot({"created_at": "1", "model": "m", "stocks": []}, tmp_path)
+    # Derive an older and a newer name from the real timestamp — no fixed
+    # dates, so the suite cannot expire (date bomb).
+    when = datetime.strptime(first.stem, "predictions-%Y%m%d-%H%M%S")
+    older = tmp_path / (when - timedelta(seconds=1)).strftime(
+        "predictions-%Y%m%d-%H%M%S.json"
     )
-    newest = tmp_path / "predictions-20261231-235959.json"
+    newest = tmp_path / (when + timedelta(seconds=1)).strftime(
+        "predictions-%Y%m%d-%H%M%S.json"
+    )
+    older.write_text('{"created_at": "2"}', encoding="utf-8")
     newest.write_text('{"created_at": "3"}', encoding="utf-8")
     (tmp_path / "not-a-snapshot.txt").write_text("x", encoding="utf-8")
     assert latest_snapshot(tmp_path) == newest
     empty = tmp_path / "empty"
     empty.mkdir()
     assert latest_snapshot(empty) is None
+
+
+def test_price_history_lines_tail_90_with_comma(tmp_path):
+    frame = _write_price_csv(tmp_path / "data", "PKO.WA", rows=95, start_price=50.0)
+    lines = _price_history_lines(frame)
+    assert len(lines) == 90
+    assert lines[0] == "2026-09-21: 55,00"  # first of the last 90 days
+    assert lines[-1] == "2026-12-19: 144,00"  # the newest close

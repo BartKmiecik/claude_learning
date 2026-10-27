@@ -70,6 +70,18 @@ def test_render_failed_agent_row_and_averages(tmp_path):
     assert "brak danych" in text and "Średnia" in text and "narzędzie szkoleniowe" in text
 
 
+def test_render_escapes_display_name_and_symbol(tmp_path):
+    stock = _stock("PKO.WA", 62.0,
+        [("a", "<b>Analityk</b>", {"1d": 62.0, "1w": 63.0, "1m": 64.0})])
+    stock["symbol"] = "<script>alert(1)</script>"
+    render_report(_snapshot(stock), tmp_path / "raport.html")
+    text = (tmp_path / "raport.html").read_text(encoding="utf-8")
+    assert "<b>Analityk</b>" not in text
+    assert html_mod.escape("<b>Analityk</b>") in text
+    assert "<script>alert(1)</script>" not in text
+    assert html_mod.escape("<script>alert(1)</script>") in text
+
+
 def test_render_escapes_html_in_justification(tmp_path):
     evil = "<script>alert(1)</script>"
     stock = _stock("PKO.WA", 62.0,

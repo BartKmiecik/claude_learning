@@ -5,12 +5,29 @@ import pytest
 
 from agent_predykcje.agent import (
     AgentError,
+    build_user_message,
     default_model,
     make_client,
     predict_stock,
     validate_prediction,
     PREDICTION_SCHEMA,
+    _signals_line,
 )
+
+SIGNALS = {
+    "return_1m": 0.10,
+    "return_3m": 0.20,
+    "return_12m": 0.30,
+    "momentum_6m": 0.05,
+    "annualized_volatility": 0.25,
+    "rsi14": 55.0,
+    "sma50": 61.0,
+    "sma200": 60.0,
+    "max_drawdown": -0.10,
+    "sma50_above_sma200": True,
+    "golden_cross_recent": False,
+    "death_cross_recent": False,
+}
 
 
 class FakeClient:
@@ -21,6 +38,24 @@ class FakeClient:
         return self
 
     def create(self, **kwargs):
+        kind = self.responses.pop(0)
+        if isinstance(kind, Exception):
+            raise kind
+        return kind
+
+
+class CapturingClient:
+    """FakeClient variant that records the kwargs of the last create() call."""
+
+    def __init__(self, responses):
+        self.responses = list(responses)
+        self.kwargs = None
+
+    def messages(self):
+        return self
+
+    def create(self, **kwargs):
+        self.kwargs = kwargs
         kind = self.responses.pop(0)
         if isinstance(kind, Exception):
             raise kind
@@ -96,3 +131,54 @@ def test_make_client_credentials_error(monkeypatch):
 def test_default_model_env_override(monkeypatch):
     monkeypatch.setenv("AGENT_PREDYKCJE_MODEL", "claude-sonnet-5-5")
     assert default_model() == "claude-sonnet-5-5"
+
+
+def test_predict_stock_pins_wire_shape():
+    """max_tokens, output_config, the beta header and fallbacks must not drift."""
+    client = CapturingClient([_ok_response()])
+    predict_stock("p", "m", 62.0, client=client, model="m")
+    kwargs = client.kwargs
+    assert kwargs["max_tokens"] == 16000
+    assert kwargs["output_config"]["format"]["type"] == "json_schema"
+    assert kwargs["output_config"]["effort"] == "medium"
+    assert (
+        kwargs["extra_headers"]["anthropic-beta"]
+        == "server-side-fallback-2026-07-01"
+    )
+    assert kwargs["extra_body"] == {"fallbacks": "default"}
+
+
+def test_predict_stock_typeerror_credentials_translated():
+    # SDK 2.x raises a TypeError mentioning authentication when no credentials
+    # resolve — must be translated to the Polish `ant auth login` guidance.
+    client = FakeClient([TypeError("no authentication credentials provided")])
+    with pytest.raises(AgentError, match="ant auth login"):
+        predict_stock("p", "m", 62.0, client=client, model="m")
+
+
+def test_predict_stock_other_typeerror_propagates():
+    client = FakeClient([TypeError("unrelated programming bug")])
+    with pytest.raises(TypeError):
+        predict_stock("p", "m", 62.0, client=client, model="m")
+
+
+def test_signals_line_renders_none_as_dash():
+    # sma50_above_sma200 is None on short series; the Polish prompt must not
+    # leak the literal English "None" — it renders as "—" like other NAs.
+    line = _signals_line("PKO.WA", dict(SIGNALS, sma50_above_sma200=None))
+    assert "None" not in line
+    assert "SMA50>SMA200 —" in line
+
+
+def test_build_user_message_includes_price_history():
+    message = build_user_message(
+        "PKO.WA",
+        {"date": "2026-10-27", "price": 62.0},
+        SIGNALS,
+        {},
+        [],
+        recent_prices=["2026-10-23: 61,50", "2026-10-26: 62,00"],
+    )
+    assert "HISTORIA CEN" in message
+    assert "2026-10-23: 61,50" in message
+    assert "2026-10-26: 62,00" in message

@@ -6,9 +6,19 @@ import yaml
 
 
 def load_watchlist(path) -> dict:
-    """Load watchlist.yaml — dict with sections 'stocks' and 'indices'."""
+    """Load watchlist.yaml — dict with sections 'stocks' and 'indices'.
+
+    An empty file (safe_load -> None) or any non-mapping document raises
+    yaml.YAMLError, so the CLI reports a corrupt watchlist instead of
+    crashing on a later .get() call.
+    """
     with open(path, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        watchlist = yaml.safe_load(f)
+    if not isinstance(watchlist, dict):
+        raise yaml.YAMLError(
+            "plik musi zawierać mapę z sekcjami 'stocks' i 'indices'"
+        )
+    return watchlist
 
 
 def all_symbols(watchlist: dict) -> list:

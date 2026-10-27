@@ -37,6 +37,19 @@ def anchor_of(df: pd.DataFrame) -> dict:
     return {"date": str(df["date"].iloc[-1]), "price": float(df["close"].iloc[-1])}
 
 
+HISTORY_DAYS = 90
+
+
+def _price_history_lines(df: pd.DataFrame, days: int = HISTORY_DAYS) -> list[str]:
+    """Last `days` rows as compact 'YYYY-MM-DD: CENA' lines (comma decimal)."""
+    tail = df[["date", "close"]].tail(days)
+    lines = []
+    for date, close in zip(tail["date"], tail["close"]):
+        price = f"{float(close):.2f}".replace(".", ",")
+        lines.append(f"{date}: {price}")
+    return lines
+
+
 def run_analysis(
     watchlist, data_dir, personas_dir, client=None, model=None, max_workers=5
 ) -> dict:
@@ -74,7 +87,12 @@ def run_analysis(
         entry = {"symbol": symbol, "anchor": anchor, "agents": []}
         stocks.append(entry)
         user_message = build_user_message(
-            symbol, anchor, compute_signals(frame), index_signals, news_items
+            symbol,
+            anchor,
+            compute_signals(frame),
+            index_signals,
+            news_items,
+            recent_prices=_price_history_lines(frame),
         )
         prepared.append((entry, user_message))
 
@@ -141,8 +159,15 @@ def save_snapshot(snapshot, predictions_dir) -> Path:
 
 
 def load_snapshot(path) -> dict:
-    """Read a snapshot JSON file back as a dict."""
-    return json.loads(Path(path).read_text(encoding="utf-8"))
+    """Read a snapshot JSON file back as a dict.
+
+    A corrupt file raises AgentError with a Polish message, so the CLI
+    prints it without a raw traceback.
+    """
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise AgentError(f"snapshot jest uszkodzony: {path}") from exc
 
 
 def latest_snapshot(predictions_dir) -> Path | None:

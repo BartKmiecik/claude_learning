@@ -12,6 +12,8 @@ import sys
 import webbrowser
 from pathlib import Path
 
+import yaml
+
 from agent_predykcje.agent import AgentError
 from agent_predykcje.collector import CollectorError, collect
 from agent_predykcje.config import load_watchlist, persona_paths
@@ -149,11 +151,17 @@ def main(argv=None) -> int:
     except KeyboardInterrupt:
         print("Przerwano.", file=sys.stderr)
         return 130
+    except yaml.YAMLError:
+        print("watchlist.yaml jest uszkodzony.", file=sys.stderr)
+        return 1
     except (CollectorError, AgentError) as exc:
         print(f"Błąd: {exc}", file=sys.stderr)
         return 1
     except FileNotFoundError as exc:
         print(f"Brak pliku: {exc.filename}", file=sys.stderr)
+        return 1
+    except Exception as exc:
+        print(f"Błąd wewnętrzny: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 1
 
 
