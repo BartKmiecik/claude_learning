@@ -1,0 +1,102 @@
+<h2>Układ całego raportu — jak ułożyć 3 spółki?</h2>
+<p class="subtitle">W każdej wersji pod wykresem jest tabela 10 agentów (wykres B pokazuje tylko średnią, więc indywidualne przewidywania widać w tabeli). Kliknij, żeby wybrać.</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#fff;border:1px solid #ddd;padding:8px;font-size:11px;color:#333">
+        <div style="font-weight:700;margin-bottom:6px">Raport GPW · 2026-10-27</div>
+        <div style="border:1px solid #ccc;padding:6px;margin-bottom:6px">
+          <b>PKO (PKO.WA) · 62,00 zł</b>
+          <svg viewBox="0 0 200 55" style="display:block;margin:4px 0">
+            <polygon points="10,20 45,14 80,6 190,4 190,34 80,38 45,30 10,20" fill="#bbb" opacity="0.4"/>
+            <polyline points="10,20 45,18 80,14 190,9" fill="none" stroke="#111" stroke-width="3"/>
+          </svg>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3px;font-size:10px">
+            <span>Agent</span><span>+1D</span><span>+1T</span><span>+1M</span>
+            <span style="background:#eee">Wartościowy</span><span style="background:#eee">62,3</span><span style="background:#eee">63,1</span><span style="background:#eee">64,9</span>
+            <span style="background:#f5f5f5">Momentum</span><span style="background:#f5f5f5">62,8</span><span style="background:#f5f5f5">64,2</span><span style="background:#f5f5f5">67,0</span>
+            <span style="background:#eee">Pesymista</span><span style="background:#eee">61,6</span><span style="background:#eee">60,9</span><span style="background:#eee">59,8</span>
+            <span>…7 kolejnych + <b>średnia</b></span>
+          </div>
+        </div>
+        <div style="border:1px solid #ccc;padding:6px;margin-bottom:6px">
+          <b>PZU (PZU.WA) · 45,20 zł</b>
+          <svg viewBox="0 0 200 55" style="display:block;margin:4px 0">
+            <polygon points="10,22 45,28 80,26 190,14 190,40 80,40 45,40 10,22" fill="#bbb" opacity="0.4"/>
+            <polyline points="10,22 45,30 80,31 190,24" fill="none" stroke="#111" stroke-width="3"/>
+          </svg>
+          <div style="background:#f0f0f0;padding:4px;font-size:10px">tabela 10 agentów + średnia</div>
+        </div>
+        <div style="border:1px solid #ccc;padding:6px">
+          <b>PKN (PKN.WA) · 58,90 zł</b>
+          <svg viewBox="0 0 200 55" style="display:block;margin:4px 0">
+            <polygon points="10,20 45,16 80,10 190,12 190,30 80,24 45,26 10,20" fill="#bbb" opacity="0.4"/>
+            <polyline points="10,20 45,20 80,16 190,18" fill="none" stroke="#111" stroke-width="3"/>
+          </svg>
+          <div style="background:#f0f0f0;padding:4px;font-size:10px">tabela 10 agentów + średnia</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — jedna strona, sekcje po kolei</h3>
+      <p>Cały raport na jednej stronie, spółki jedna pod drugą. Szybki przegląd całości, przy 3 spółkach strona się nie rozdyma.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#fff;border:1px solid #ddd;padding:8px;font-size:11px;color:#333">
+        <div class="mock-nav" style="font-size:11px;margin-bottom:6px">PKO&nbsp;&nbsp;·&nbsp;&nbsp;<b style="border-bottom:2px solid #111">PZU</b>&nbsp;&nbsp;·&nbsp;&nbsp;PKN</div>
+        <div style="border:1px solid #ccc;padding:6px">
+          <b>PZU (PZU.WA) · 45,20 zł</b>
+          <svg viewBox="0 0 200 55" style="display:block;margin:4px 0">
+            <polygon points="10,22 45,28 80,26 190,14 190,40 80,40 45,40 10,22" fill="#bbb" opacity="0.4"/>
+            <polyline points="10,22 45,30 80,31 190,24" fill="none" stroke="#111" stroke-width="3"/>
+          </svg>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3px;font-size:10px">
+            <span>Agent</span><span>+1D</span><span>+1T</span><span>+1M</span>
+            <span style="background:#eee">Wartościowy</span><span style="background:#eee">45,5</span><span style="background:#eee">46,0</span><span style="background:#eee">46,8</span>
+            <span style="background:#f5f5f5">Kontrarianin</span><span style="background:#f5f5f5">45,0</span><span style="background:#f5f5f5">45,9</span><span style="background:#f5f5f5">44,9</span>
+            <span>…8 kolejnych + <b>średnia</b></span>
+          </div>
+        </div>
+        <div style="color:#888;font-size:10px;margin-top:4px">PKO i PKN czekają na swoich zakładkach</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — zakładki, jedna spółka na ekranie</h3>
+      <p>Jedna spółka na raz, dużo miejsca na wykres i tabelę. Trzeba klikać, żeby zobaczyć wszystkie — mniej wygodne przy porównywaniu.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:#fff;border:1px solid #ddd;padding:8px;font-size:11px;color:#333">
+        <div style="font-weight:700;margin-bottom:4px">Raport GPW · 2026-10-27</div>
+        <div style="border:1px solid #ccc;padding:6px;margin-bottom:6px">
+          <b>Średnia wszystkich agentów</b>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3px;font-size:10px;margin-top:4px">
+            <span></span><span>PKO</span><span>PZU</span><span>PKN</span>
+            <span>+1 dzień</span><span style="background:#eee">62,4</span><span style="background:#eee">45,3</span><span style="background:#eee">59,1</span>
+            <span>+1 tydzień</span><span style="background:#f5f5f5">63,2</span><span style="background:#f5f5f5">45,9</span><span style="background:#f5f5f5">59,7</span>
+            <span>+1 miesiąc</span><span style="background:#eee">65,1</span><span style="background:#eee">46,6</span><span style="background:#eee">60,5</span>
+          </div>
+        </div>
+        <div style="border:1px solid #ccc;padding:6px">
+          <b>PKO (PKO.WA) · 62,00 zł</b>
+          <svg viewBox="0 0 200 55" style="display:block;margin:4px 0">
+            <polygon points="10,20 45,14 80,6 190,4 190,34 80,38 45,30 10,20" fill="#bbb" opacity="0.4"/>
+            <polyline points="10,20 45,18 80,14 190,9" fill="none" stroke="#111" stroke-width="3"/>
+          </svg>
+          <div style="background:#f0f0f0;padding:4px;font-size:10px">tabela 10 agentów + średnia</div>
+        </div>
+        <div style="color:#888;font-size:10px;margin-top:4px">↓ dalej sekcje PZU i PKN</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — najpierw zbiorcze podsumowanie, potem sekcje</h3>
+      <p>Na górze tabela średnich dla wszystkich spółek naraz, pod nią pełne sekcje jak w A. Dobry przegląd, ale strona dłuższa.</p>
+    </div>
+  </div>
+</div>
