@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python -c \"import os, subprocess; [subprocess.run([os.path.join('projects', p, '.venv', 'Scripts', 'python.exe'), '-m', 'black', 'src', 'tests'], cwd=os.path.join('projects', p), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) for p in ['agent-gieldowy', 'agent-predykcje']]; raise SystemExit(0)\""
+            "command": "python -c \"import os, subprocess; [subprocess.run([os.path.join('projects', p, '.venv', 'Scripts', 'python.exe'), '-m', 'black', 'src', 'tests'], cwd=os.path.join('projects', p), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) for p in ['agent-gieldowy', 'agent-predykcje'] if os.path.exists(os.path.join('projects', p, '.venv', 'Scripts', 'python.exe'))]; raise SystemExit(0)\""
           }
         ]
       }
