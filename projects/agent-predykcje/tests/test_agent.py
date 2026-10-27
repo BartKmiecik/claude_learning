@@ -31,17 +31,21 @@ SIGNALS = {
 
 
 class FakeClient:
+    """SDK-shaped fake: client.messages is a resource object, not a method."""
+
     def __init__(self, responses):
         self.responses = list(responses)
+        self.messages = self._Messages(self)
 
-    def messages(self):
-        return self
+    class _Messages:
+        def __init__(self, client):
+            self.client = client
 
-    def create(self, **kwargs):
-        kind = self.responses.pop(0)
-        if isinstance(kind, Exception):
-            raise kind
-        return kind
+        def create(self, **kwargs):
+            kind = self.client.responses.pop(0)
+            if isinstance(kind, Exception):
+                raise kind
+            return kind
 
 
 class CapturingClient:
@@ -50,16 +54,18 @@ class CapturingClient:
     def __init__(self, responses):
         self.responses = list(responses)
         self.kwargs = None
+        self.messages = self._Messages(self)
 
-    def messages(self):
-        return self
+    class _Messages:
+        def __init__(self, client):
+            self.client = client
 
-    def create(self, **kwargs):
-        self.kwargs = kwargs
-        kind = self.responses.pop(0)
-        if isinstance(kind, Exception):
-            raise kind
-        return kind
+        def create(self, **kwargs):
+            self.client.kwargs = kwargs
+            kind = self.client.responses.pop(0)
+            if isinstance(kind, Exception):
+                raise kind
+            return kind
 
 
 def _ok_response():

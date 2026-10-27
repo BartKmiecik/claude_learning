@@ -141,7 +141,7 @@ def predict_stock(
     last_error = None
     for attempt in range(2):
         try:
-            response = client.messages().create(
+            response = client.messages.create(
                 model=model,
                 max_tokens=16000,
                 system=persona_prompt,
