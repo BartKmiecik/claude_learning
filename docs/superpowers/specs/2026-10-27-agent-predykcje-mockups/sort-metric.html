@@ -1,0 +1,56 @@
+<h2>Sortowanie po zysku — według czego liczyć?</h2>
+<p class="subtitle">Układ A przyjęty: jedna strona, sekcje spółek posortowane od największego przewidywanego zysku. Wybierz, jak liczyć ten „zysk".</p>
+
+<div class="options">
+  <div class="option" data-choice="avg3" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Średnia z 3 horyzontów</h3>
+      <p>Średni % zmiany z +1 dnia, +1 tygodnia i +1 miesiąca — równoważy krótki i długi horyzont.</p>
+    </div>
+  </div>
+  <div class="option" data-choice="m1" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Tylko +1 miesiąc</h3>
+      <p>Zysk przewidywany na miesiąc — największy horyzont, sortowanie wg „gdzie będzie najwięcej zysku".</p>
+    </div>
+  </div>
+</div>
+
+<div class="mockup">
+  <div class="mockup-header">Podgląd: raport posortowany (na razie wg opcji A)</div>
+  <div class="mockup-body" style="background:#fff;padding:10px;font-size:12px;color:#333">
+    <div style="font-weight:700;margin-bottom:8px">Raport GPW · 2026-10-27 · spółki od największego średniego zysku</div>
+    <div style="border:1px solid #ccc;padding:6px;margin-bottom:6px">
+      <b>1. PKO (PKO.WA) · 62,00 zł</b> <span style="background:#e6f4ea;border-radius:3px;padding:1px 6px;margin-left:6px">średni zysk +2,5%</span>
+      <svg viewBox="0 0 200 55" style="display:block;margin:4px 0">
+        <polygon points="10,20 45,14 80,6 190,4 190,34 80,38 45,30 10,20" fill="#bbb" opacity="0.4"/>
+        <polyline points="10,20 45,18 80,14 190,9" fill="none" stroke="#111" stroke-width="3"/>
+      </svg>
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3px;font-size:10px">
+        <span>Agent</span><span>+1D</span><span>+1T</span><span>+1M</span>
+        <span style="background:#eee">Wartościowy</span><span style="background:#eee">62,3</span><span style="background:#eee">63,1</span><span style="background:#eee">64,9</span>
+        <span style="background:#f5f5f5">Momentum</span><span style="background:#f5f5f5">62,8</span><span style="background:#f5f5f5">64,2</span><span style="background:#f5f5f5">67,0</span>
+        <span style="background:#eee">Pesymista</span><span style="background:#eee">61,6</span><span style="background:#eee">60,9</span><span style="background:#eee">59,8</span>
+        <span>…7 kolejnych + <b>średnia</b></span>
+      </div>
+    </div>
+    <div style="border:1px solid #ccc;padding:6px;margin-bottom:6px">
+      <b>2. PZU (PZU.WA) · 45,20 zł</b> <span style="background:#e6f4ea;border-radius:3px;padding:1px 6px;margin-left:6px">średni zysk +1,6%</span>
+      <svg viewBox="0 0 200 55" style="display:block;margin:4px 0">
+        <polygon points="10,22 45,28 80,26 190,14 190,40 80,40 45,40 10,22" fill="#bbb" opacity="0.4"/>
+        <polyline points="10,22 45,30 80,31 190,24" fill="none" stroke="#111" stroke-width="3"/>
+      </svg>
+      <div style="background:#f0f0f0;padding:4px;font-size:10px">tabela 10 agentów + średnia</div>
+    </div>
+    <div style="border:1px solid #ccc;padding:6px">
+      <b>3. PKN (PKN.WA) · 58,90 zł</b> <span style="background:#e6f4ea;border-radius:3px;padding:1px 6px;margin-left:6px">średni zysk +1,5%</span>
+      <svg viewBox="0 0 200 55" style="display:block;margin:4px 0">
+        <polygon points="10,20 45,16 80,10 190,12 190,30 80,24 45,26 10,20" fill="#bbb" opacity="0.4"/>
+        <polyline points="10,20 45,20 80,16 190,18" fill="none" stroke="#111" stroke-width="3"/>
+      </svg>
+      <div style="background:#f0f0f0;padding:4px;font-size:10px">tabela 10 agentów + średnia</div>
+    </div>
+  </div>
+</div>

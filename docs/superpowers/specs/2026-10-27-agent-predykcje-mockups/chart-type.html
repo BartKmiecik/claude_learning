@@ -1,0 +1,83 @@
+<h2>Wykres przewidywań dla jednej spółki — która forma?</h2>
+<p class="subtitle">Przykład na PKO (cena dziś 62 zł), 3 horyzonty: +1 dzień, +1 tydzień, +1 miesiąc. Nazwy agentów to tylko przykładowe osobowości. Kliknij kartę, żeby wybrać.</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+        <line x1="50" y1="30" x2="50" y2="190" stroke="#999"/>
+        <line x1="50" y1="190" x2="370" y2="190" stroke="#999"/>
+        <text x="50" y="205" font-size="9" fill="#666">Dziś</text>
+        <text x="157" y="205" font-size="9" fill="#666" text-anchor="middle">+1 dzień</text>
+        <text x="263" y="205" font-size="9" fill="#666" text-anchor="middle">+1 tydz.</text>
+        <text x="370" y="205" font-size="9" fill="#666" text-anchor="middle">+1 mies.</text>
+        <polyline points="50,144 157,142 263,138 370,128" fill="none" stroke="#1f77b4" stroke-width="1.5"/>
+        <polyline points="50,144 157,147 263,139 370,121" fill="none" stroke="#d62728" stroke-width="1.5"/>
+        <polyline points="50,144 157,148 263,150 370,140" fill="none" stroke="#2ca02c" stroke-width="1.5"/>
+        <polyline points="50,144 157,140 263,126 370,100" fill="none" stroke="#9467bd" stroke-width="1.5"/>
+        <polyline points="50,144 157,138 263,147 370,133" fill="none" stroke="#8c564b" stroke-width="1.5"/>
+        <polyline points="50,144 157,143 263,136 370,123" fill="none" stroke="#e377c2" stroke-width="1.5"/>
+        <polyline points="50,144 157,150 263,157 370,168" fill="none" stroke="#7f7f7f" stroke-width="1.5"/>
+        <polyline points="50,144 157,137 263,122 370,92" fill="none" stroke="#bcbd22" stroke-width="1.5"/>
+        <polyline points="50,144 157,144 263,141 370,135" fill="none" stroke="#17becf" stroke-width="1.5"/>
+        <polyline points="50,144 157,145 263,141 370,119" fill="none" stroke="#ff7f0e" stroke-width="1.5"/>
+        <polyline points="50,144 157,143 263,140 370,126" fill="none" stroke="#111" stroke-width="4"/>
+      </svg>
+    </div>
+    <div class="card-body">
+      <h3>A — 11 linii</h3>
+      <p>Każdy agent osobną cienką linią, średnia grubą czarną. Widać rozjazd osobowości i średnią naraz, ale przy 10 liniach robi się gęsto.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+        <line x1="50" y1="30" x2="50" y2="190" stroke="#999"/>
+        <line x1="50" y1="190" x2="370" y2="190" stroke="#999"/>
+        <text x="50" y="205" font-size="9" fill="#666">Dziś</text>
+        <text x="157" y="205" font-size="9" fill="#666" text-anchor="middle">+1 dzień</text>
+        <text x="263" y="205" font-size="9" fill="#666" text-anchor="middle">+1 tydz.</text>
+        <text x="370" y="205" font-size="9" fill="#666" text-anchor="middle">+1 mies.</text>
+        <polygon points="50,144 157,137 263,122 370,92 370,168 263,157 157,150 50,144" fill="#bbb" opacity="0.35"/>
+        <polyline points="50,144 157,143 263,140 370,126" fill="none" stroke="#111" stroke-width="4"/>
+        <text x="330" y="85" font-size="9" fill="#666">najwyższe przewidywanie</text>
+        <text x="330" y="175" font-size="9" fill="#666">najniższe przewidywanie</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <h3>B — średnia + przedział</h3>
+      <p>Gruba linia średniej i szary przedział min–max agentów. Czysto i czytelnie, ale osobowości znikają — nie widać, kto co myśli.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="width:100%">
+        <text x="70" y="18" font-size="10" fill="#333" text-anchor="middle">+1 dzień</text>
+        <text x="200" y="18" font-size="10" fill="#333" text-anchor="middle">+1 tydzień</text>
+        <text x="330" y="18" font-size="10" fill="#333" text-anchor="middle">+1 miesiąc</text>
+        <line x1="20" y1="190" x2="120" y2="190" stroke="#999"/>
+        <line x1="150" y1="190" x2="250" y2="190" stroke="#999"/>
+        <line x1="280" y1="190" x2="380" y2="190" stroke="#999"/>
+        <line x1="20" y1="144" x2="120" y2="144" stroke="#111" stroke-width="2.5"/>
+        <line x1="150" y1="140" x2="250" y2="140" stroke="#111" stroke-width="2.5"/>
+        <line x1="280" y1="126" x2="380" y2="126" stroke="#111" stroke-width="2.5"/>
+        <circle cx="28" cy="142" r="3" fill="#1f77b4"/><circle cx="38" cy="147" r="3" fill="#d62728"/><circle cx="48" cy="148" r="3" fill="#2ca02c"/><circle cx="58" cy="140" r="3" fill="#9467bd"/><circle cx="68" cy="138" r="3" fill="#8c564b"/>
+        <circle cx="78" cy="143" r="3" fill="#e377c2"/><circle cx="88" cy="150" r="3" fill="#7f7f7f"/><circle cx="98" cy="137" r="3" fill="#bcbd22"/><circle cx="108" cy="144" r="3" fill="#17becf"/><circle cx="118" cy="145" r="3" fill="#ff7f0e"/>
+        <circle cx="158" cy="138" r="3" fill="#1f77b4"/><circle cx="168" cy="139" r="3" fill="#d62728"/><circle cx="178" cy="150" r="3" fill="#2ca02c"/><circle cx="188" cy="126" r="3" fill="#9467bd"/><circle cx="198" cy="147" r="3" fill="#8c564b"/>
+        <circle cx="208" cy="136" r="3" fill="#e377c2"/><circle cx="218" cy="157" r="3" fill="#7f7f7f"/><circle cx="228" cy="122" r="3" fill="#bcbd22"/><circle cx="238" cy="141" r="3" fill="#17becf"/><circle cx="248" cy="141" r="3" fill="#ff7f0e"/>
+        <circle cx="288" cy="128" r="3" fill="#1f77b4"/><circle cx="298" cy="121" r="3" fill="#d62728"/><circle cx="308" cy="140" r="3" fill="#2ca02c"/><circle cx="318" cy="100" r="3" fill="#9467bd"/><circle cx="328" cy="133" r="3" fill="#8c564b"/>
+        <circle cx="338" cy="123" r="3" fill="#e377c2"/><circle cx="348" cy="168" r="3" fill="#7f7f7f"/><circle cx="358" cy="92" r="3" fill="#bcbd22"/><circle cx="368" cy="135" r="3" fill="#17becf"/><circle cx="378" cy="119" r="3" fill="#ff7f0e"/>
+        <circle cx="70" cy="144" r="6" fill="#111"/>
+        <circle cx="200" cy="140" r="6" fill="#111"/>
+        <circle cx="330" cy="126" r="6" fill="#111"/>
+        <text x="70" y="198" font-size="9" fill="#333" text-anchor="middle">kropki = agenci, czarna = średnia</text>
+      </svg>
+    </div>
+    <div class="card-body">
+      <h3>C — 3 panele, po jednym na horyzont</h3>
+      <p>Dla każdego horyzontu osobny panel: kropki agentów i wyróżniona średnia. Łatwiej porównać rozrzut, ale tracimy linię „z dziś do celu".</p>
+    </div>
+  </div>
+</div>
