@@ -138,7 +138,8 @@ def test_score_frame_rsi_boundaries():
 
 def test_screen_universe_selection_and_order():
     # A: score 8, return_3m 0.10; B: score 8, return_3m 0.20; C: score 5
-    # → rows[0] = B, rows[1] = A; selected == [B, A]; C nie wybrane
+    # → rows[0] = B, rows[1] = A; selected == [B, A, C]
+    # (przy <10 punktowanych wybierane są wszystkie — patrz interfejs wyżej)
 
 def test_screen_universe_tie_break():
     # A i B: score 8, return_3m równy; A return_1m wyższy → A przed B
