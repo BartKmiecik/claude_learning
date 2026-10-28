@@ -1,0 +1,322 @@
+{
+"1": {
+"isin": "PLCMP0000017",
+"kod": "COMP"
+},
+"2": {
+"isin": "PLABS0000018",
+"kod": "ASSECOBS"
+},
+"3": {
+"isin": "PLMLPGR00017",
+"kod": "MLPGROUP"
+},
+"4": {
+"isin": "PLTORPL00016",
+"kod": "TORPOL"
+},
+"5": {
+"isin": "PLROBYG00321",
+"kod": "ROBYG"
+},
+"6": {
+"isin": "PLECHPS00019",
+"kod": "ECHO"
+},
+"7": {
+"isin": "PLARHCM00016",
+"kod": "ARCHICOM"
+},
+"8": {
+"isin": "PLMNNCP00011",
+"kod": "MENNICA"
+},
+"9": {
+"isin": "PLVSTLA00011",
+"kod": "VRG"
+},
+"10": {
+"isin": "PLFERRO00016",
+"kod": "FERRO"
+},
+"11": {
+"isin": "PLPILAB00012",
+"kod": "DATAWALK"
+},
+"12": {
+"isin": "PLMDNCE00016",
+"kod": "MEDINICE"
+},
+"13": {
+"isin": "PLCNTSL00014",
+"kod": "COGNOR"
+},
+"14": {
+"isin": "PLAPATR00018",
+"kod": "APATOR"
+},
+"15": {
+"isin": "PL4FNMD00013",
+"kod": "DIGITANET"
+},
+"16": {
+"isin": "PLENTER00017",
+"kod": "ENTER"
+},
+"17": {
+"isin": "PLATAL000046",
+"kod": "ATAL"
+},
+"18": {
+"isin": "PLOPNPL00013",
+"kod": "OPONEO.PL"
+},
+"19": {
+"isin": "PLCTHQM00018",
+"kod": "CRQUANTUM"
+},
+"20": {
+"isin": "PLELEKT00016",
+"kod": "ELEKTROTI"
+},
+"21": {
+"isin": "US44853H1086",
+"kod": "HUUUGE"
+},
+"22": {
+"isin": "PLCLNPH00015",
+"kod": "CLNPHARMA"
+},
+"23": {
+"isin": "PLUNMOT00013",
+"kod": "UNIMOT"
+},
+"24": {
+"isin": "PLSNZKA00033",
+"kod": "SNIEZKA"
+},
+"25": {
+"isin": "PLKGNRC00015",
+"kod": "KOGENERA"
+},
+"26": {
+"isin": "PLSLVCR00029",
+"kod": "SELVITA"
+},
+"27": {
+"isin": "PLRXCNC00017",
+"kod": "REX"
+},
+"28": {
+"isin": "PLDECOR00013",
+"kod": "DECORA"
+},
+"29": {
+"isin": "AU0000198939",
+"kod": "GREENX"
+},
+"30": {
+"isin": "PLVNTCP00019",
+"kod": "NIEWIADOW"
+},
+"31": {
+"isin": "PLPCCRK00076",
+"kod": "PCCROKITA"
+},
+"32": {
+"isin": "PLQRCUS00012",
+"kod": "QUERCUS"
+},
+"33": {
+"isin": "PLMCIMG00012",
+"kod": "MCI"
+},
+"34": {
+"isin": "PLVIGOS00015",
+"kod": "VIGOPHOTN"
+},
+"35": {
+"isin": "PLCMPLD00016",
+"kod": "SYGNITY"
+},
+"36": {
+"isin": "PLWAWEL00013",
+"kod": "WAWEL"
+},
+"37": {
+"isin": "PLSTLPD00017",
+"kod": "STALPROD"
+},
+"38": {
+"isin": "PLSCWAY00018",
+"kod": "SCANWAY"
+},
+"39": {
+"isin": "PLEURCH00011",
+"kod": "EUROCASH"
+},
+"40": {
+"isin": "PLTRCZN00016",
+"kod": "TARCZYNSKI"
+},
+"41": {
+"isin": "PLSTLSK00016",
+"kod": "SANOK"
+},
+"42": {
+"isin": "PLBCLTX00019",
+"kod": "BIOCELTIX"
+},
+"43": {
+"isin": "PLCPTRT00014",
+"kod": "CAPTORTX"
+},
+"44": {
+"isin": "PLDADEL00013",
+"kod": "DADELO"
+},
+"45": {
+"isin": "PLCTINT00018",
+"kod": "CIGAMES"
+},
+"46": {
+"isin": "PLSNBIO00013",
+"kod": "SYN2BIO"
+},
+"47": {
+"isin": "PLAGORA00067",
+"kod": "AGORA"
+},
+"48": {
+"isin": "PLBRSZW00011",
+"kod": "BORYSZEW"
+},
+"49": {
+"isin": "PLBLOBR00014",
+"kod": "BLOOBER"
+},
+"50": {
+"isin": "PLZEPAK00012",
+"kod": "ZEPAK"
+},
+"51": {
+"isin": "PL11BTS00015",
+"kod": "11BIT"
+},
+"52": {
+"isin": "PLPLAYW00015",
+"kod": "PLAYWAY"
+},
+"53": {
+"isin": "PLLWBGD00016",
+"kod": "BOGDANKA"
+},
+"54": {
+"isin": "PLSELNA00010",
+"kod": "SELENAFM"
+},
+"55": {
+"isin": "PLSELVT00013",
+"kod": "RYVU"
+},
+"56": {
+"isin": "PLBOS0000019",
+"kod": "BOS"
+},
+"57": {
+"isin": "NL0000686509",
+"kod": "ASTARTA"
+},
+"58": {
+"isin": "PLSCPFL00018",
+"kod": "SCPFL"
+},
+"59": {
+"isin": "PLTOYA000011",
+"kod": "TOYA"
+},
+"60": {
+"isin": "PLAMICA00010",
+"kod": "AMICA"
+},
+"61": {
+"isin": "PLMDCLG00015",
+"kod": "MEDICALG"
+},
+"62": {
+"isin": "PLUNBEP00015",
+"kod": "UNIBEP"
+},
+"63": {
+"isin": "PLCRPJR00019",
+"kod": "CREEPYJAR"
+},
+"64": {
+"isin": "PLVOTUM00016",
+"kod": "VOTUM"
+},
+"65": {
+"isin": "PLARLEN00012",
+"kod": "ARLEN"
+},
+"66": {
+"isin": "PLFORTE00012",
+"kod": "FORTE"
+},
+"67": {
+"isin": "PLMSTZB00018",
+"kod": "MOSTALZAB"
+},
+"68": {
+"isin": "LU0607203980",
+"kod": "IMCOMPANY"
+},
+"69": {
+"isin": "PLMRCTR00015",
+"kod": "MERCATOR"
+},
+"70": {
+"isin": "PLAMBRA00013",
+"kod": "AMBRA"
+},
+"71": {
+"isin": "PLANSWR00019",
+"kod": "ANSWEAR"
+},
+"72": {
+"isin": "PLSTLEX00019",
+"kod": "STALEXP"
+},
+"73": {
+"isin": "PLONDE000018",
+"kod": "ONDE"
+},
+"74": {
+"isin": "PLBIOTN00029",
+"kod": "BIOTON"
+},
+"75": {
+"isin": "PLATREM00017",
+"kod": "ATREM"
+},
+"76": {
+"isin": "PLARTPR00012",
+"kod": "ARCTIC"
+},
+"77": {
+"isin": "PLBMDLB00018",
+"kod": "SNTVERSE"
+},
+"78": {
+"isin": "PLWELTN00012",
+"kod": "WIELTON"
+},
+"79": {
+"isin": "PLBMECH00012",
+"kod": "BUMECH"
+},
+"80": {
+"isin": "PLZBMZC00019",
+"kod": "ZREMB"
+}
+}

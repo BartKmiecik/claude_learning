@@ -1,0 +1,1199 @@
+{
+ "1": {
+  "kod": "COMP",
+  "cands": [
+   "CMP.WA"
+  ],
+  "hit": [
+   "CMP.WA",
+   [
+    "OK",
+    106.8,
+    "Comp S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "2": {
+  "kod": "ASSECOBS",
+  "cands": [
+   "ABS.WA"
+  ],
+  "hit": [
+   "ABS.WA",
+   [
+    "OK",
+    89.0,
+    "Asseco Business Solutions S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "3": {
+  "kod": "MLPGROUP",
+  "cands": [
+   "MLG.WA"
+  ],
+  "hit": [
+   "MLG.WA",
+   [
+    "OK",
+    102.5,
+    "MLP Group S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "4": {
+  "kod": "TORPOL",
+  "cands": [
+   "TOR.WA"
+  ],
+  "hit": [
+   "TOR.WA",
+   [
+    "OK",
+    68.1,
+    "Torpol S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "5": {
+  "kod": "ROBYG",
+  "cands": [
+   "ROB.WA"
+  ],
+  "hit": [
+   "ROB.WA",
+   [
+    "OK",
+    29.85,
+    "Robyg S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "6": {
+  "kod": "ECHO",
+  "cands": [
+   "ECH.WA"
+  ],
+  "hit": [
+   "ECH.WA",
+   [
+    "OK",
+    5.36,
+    "Echo Investment S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "7": {
+  "kod": "ARCHICOM",
+  "cands": [
+   "ARH.WA"
+  ],
+  "hit": [
+   "ARH.WA",
+   [
+    "OK",
+    49.6,
+    "Archicom S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "8": {
+  "kod": "MENNICA",
+  "cands": [
+   "MNC.WA"
+  ],
+  "hit": [
+   "MNC.WA",
+   [
+    "OK",
+    38.1,
+    "Mennica Polska S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "9": {
+  "kod": "VRG",
+  "cands": [
+   "VRG.WA"
+  ],
+  "hit": [
+   "VRG.WA",
+   [
+    "OK",
+    5.52,
+    "VRG S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "10": {
+  "kod": "FERRO",
+  "cands": [
+   "FRO.WA"
+  ],
+  "hit": [
+   "FRO.WA",
+   [
+    "OK",
+    28.3,
+    "FERRO S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "11": {
+  "kod": "DATAWALK",
+  "cands": [
+   "DAT.WA"
+  ],
+  "hit": [
+   "DAT.WA",
+   [
+    "OK",
+    105.8,
+    "DataWalk S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "12": {
+  "kod": "MEDINICE",
+  "cands": [
+   "ICE.WA"
+  ],
+  "hit": [
+   "ICE.WA",
+   [
+    "OK",
+    53.1,
+    "Medinice S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "13": {
+  "kod": "COGNOR",
+  "cands": [
+   "COG.WA"
+  ],
+  "hit": [
+   "COG.WA",
+   [
+    "OK",
+    5.095,
+    "Cognor Holding S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "14": {
+  "kod": "APATOR",
+  "cands": [
+   "APT.WA"
+  ],
+  "hit": [
+   "APT.WA",
+   [
+    "OK",
+    25.5,
+    "Apator S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "15": {
+  "kod": "DIGITANET",
+  "cands": [
+   "DIG.WA"
+  ],
+  "hit": [
+   "DIG.WA",
+   [
+    "OK",
+    309.8,
+    "Digital Network SA",
+    "WSE"
+   ]
+  ]
+ },
+ "16": {
+  "kod": "ENTER",
+  "cands": [
+   "ENT.WA"
+  ],
+  "hit": [
+   "ENT.WA",
+   [
+    "OK",
+    48.6,
+    "Enter Air S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "17": {
+  "kod": "ATAL",
+  "cands": [
+   "1AT.WA"
+  ],
+  "hit": [
+   "1AT.WA",
+   [
+    "OK",
+    62.0,
+    "Atal S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "18": {
+  "kod": "OPONEO.PL",
+  "cands": [
+   "OPN.WA"
+  ],
+  "hit": [
+   "OPN.WA",
+   [
+    "OK",
+    101.6,
+    "Oponeo.pl S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "19": {
+  "kod": "CRQUANTUM",
+  "cands": [
+   "CRT.WA",
+   "CRQ.WA",
+   "CRI.WA"
+  ],
+  "hit": [
+   "CRQ.WA",
+   [
+    "OK",
+    202.0,
+    "Creotech Quantum S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "20": {
+  "kod": "ELEKTROTI",
+  "cands": [
+   "ELT.WA"
+  ],
+  "hit": [
+   "ELT.WA",
+   [
+    "OK",
+    68.35,
+    "Elektrotim S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "21": {
+  "kod": "HUUUGE",
+  "cands": [
+   "HUG.WA"
+  ],
+  "hit": [
+   "HUG.WA",
+   [
+    "OK",
+    24.95,
+    "Huuuge, Inc.",
+    "WSE"
+   ]
+  ]
+ },
+ "22": {
+  "kod": "CLNPHARMA",
+  "cands": [
+   "CLN.WA"
+  ],
+  "hit": [
+   "CLN.WA",
+   [
+    "OK",
+    17.6,
+    "Celon Pharma S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "23": {
+  "kod": "UNIMOT",
+  "cands": [
+   "UNT.WA"
+  ],
+  "hit": [
+   "UNT.WA",
+   [
+    "OK",
+    159.0,
+    "Unimot S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "24": {
+  "kod": "SNIEZKA",
+  "cands": [
+   "SKA.WA"
+  ],
+  "hit": [
+   "SKA.WA",
+   [
+    "OK",
+    84.6,
+    "Fabryka Farb i Lakierów Sniezka SA",
+    "WSE"
+   ]
+  ]
+ },
+ "25": {
+  "kod": "KOGENERA",
+  "cands": [
+   "KGN.WA"
+  ],
+  "hit": [
+   "KGN.WA",
+   [
+    "OK",
+    86.9,
+    "Zespól Elektrocieplowni Wroclawskich KOG",
+    "WSE"
+   ]
+  ]
+ },
+ "26": {
+  "kod": "SELVITA",
+  "cands": [
+   "SLV.WA"
+  ],
+  "hit": [
+   "SLV.WA",
+   [
+    "OK",
+    16.8,
+    "Selvita S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "27": {
+  "kod": "REX",
+  "cands": [
+   "REX.WA"
+  ],
+  "hit": [
+   "REX.WA",
+   [
+    "OK",
+    11.4,
+    "Rex Concepts S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "28": {
+  "kod": "DECORA",
+  "cands": [
+   "DCR.WA"
+  ],
+  "hit": [
+   "DCR.WA",
+   [
+    "OK",
+    83.6,
+    "Decora S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "29": {
+  "kod": "GREENX",
+  "cands": [
+   "GRX.WA",
+   "GX1.WA"
+  ],
+  "hit": [
+   "GRX.WA",
+   [
+    "OK",
+    2.612,
+    "GreenX Metals Limited",
+    "WSE"
+   ]
+  ]
+ },
+ "30": {
+  "kod": "NIEWIADOW",
+  "cands": [
+   "NIW.WA"
+  ],
+  "hit": null
+ },
+ "31": {
+  "kod": "PCCROKITA",
+  "cands": [
+   "PCR.WA"
+  ],
+  "hit": [
+   "PCR.WA",
+   [
+    "OK",
+    63.8,
+    "PCC Rokita SA",
+    "WSE"
+   ]
+  ]
+ },
+ "32": {
+  "kod": "QUERCUS",
+  "cands": [
+   "QRS.WA",
+   "QMULTIFIZ.WA"
+  ],
+  "hit": [
+   "QRS.WA",
+   [
+    "OK",
+    12.78,
+    "Quercus TFI S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "33": {
+  "kod": "MCI",
+  "cands": [
+   "MCI.WA"
+  ],
+  "hit": [
+   "MCI.WA",
+   [
+    "OK",
+    27.7,
+    "MCI Capital Alternatywna Spólka Inwestyc",
+    "WSE"
+   ]
+  ]
+ },
+ "34": {
+  "kod": "VIGOPHOTN",
+  "cands": [
+   "VGO.WA"
+  ],
+  "hit": [
+   "VGO.WA",
+   [
+    "OK",
+    550.0,
+    "VIGO Photonics S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "35": {
+  "kod": "SYGNITY",
+  "cands": [
+   "SGN.WA"
+  ],
+  "hit": [
+   "SGN.WA",
+   [
+    "OK",
+    92.0,
+    "Sygnity S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "36": {
+  "kod": "WAWEL",
+  "cands": [
+   "WWL.WA"
+  ],
+  "hit": [
+   "WWL.WA",
+   [
+    "OK",
+    706.0,
+    "Wawel S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "37": {
+  "kod": "STALPROD",
+  "cands": [
+   "STP.WA"
+  ],
+  "hit": [
+   "STP.WA",
+   [
+    "OK",
+    233.0,
+    "Stalprodukt S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "38": {
+  "kod": "SCANWAY",
+  "cands": [
+   "SCW.WA"
+  ],
+  "hit": [
+   "SCW.WA",
+   [
+    "OK",
+    332.0,
+    "Scanway S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "39": {
+  "kod": "EUROCASH",
+  "cands": [
+   "EUR.WA"
+  ],
+  "hit": [
+   "EUR.WA",
+   [
+    "OK",
+    5.02,
+    "Eurocash S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "40": {
+  "kod": "TARCZYNSKI",
+  "cands": [
+   "TAR.WA"
+  ],
+  "hit": [
+   "TAR.WA",
+   [
+    "OK",
+    115.0,
+    "Tarczynski S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "41": {
+  "kod": "SANOK",
+  "cands": [
+   "SNK.WA"
+  ],
+  "hit": [
+   "SNK.WA",
+   [
+    "OK",
+    19.5,
+    "Sanok Rubber Company Spólka Akcyjna",
+    "WSE"
+   ]
+  ]
+ },
+ "42": {
+  "kod": "BIOCELTIX",
+  "cands": [
+   "BCX.WA"
+  ],
+  "hit": [
+   "BCX.WA",
+   [
+    "OK",
+    72.0,
+    "Bioceltix S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "43": {
+  "kod": "CAPTORTX",
+  "cands": [
+   "CTX.WA"
+  ],
+  "hit": [
+   "CTX.WA",
+   [
+    "OK",
+    54.9,
+    "Captor Therapeutics Spolka Akcyjna",
+    "WSE"
+   ]
+  ]
+ },
+ "44": {
+  "kod": "DADELO",
+  "cands": [
+   "DAD.WA"
+  ],
+  "hit": [
+   "DAD.WA",
+   [
+    "OK",
+    88.6,
+    "Dadelo S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "45": {
+  "kod": "CIGAMES",
+  "cands": [
+   "CIG.WA"
+  ],
+  "hit": [
+   "CIG.WA",
+   [
+    "OK",
+    2.37,
+    "CI Games SE",
+    "WSE"
+   ]
+  ]
+ },
+ "46": {
+  "kod": "SYN2BIO",
+  "cands": [
+   "S2B.WA"
+  ],
+  "hit": [
+   "S2B.WA",
+   [
+    "OK",
+    61.88,
+    "Syn2bio S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "47": {
+  "kod": "AGORA",
+  "cands": [
+   "AGO.WA"
+  ],
+  "hit": [
+   "AGO.WA",
+   [
+    "OK",
+    12.15,
+    "Agora S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "48": {
+  "kod": "BORYSZEW",
+  "cands": [
+   "BRS.WA"
+  ],
+  "hit": [
+   "BRS.WA",
+   [
+    "OK",
+    4.51,
+    "Boryszew S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "49": {
+  "kod": "BLOOBER",
+  "cands": [
+   "BLO.WA"
+  ],
+  "hit": [
+   "BLO.WA",
+   [
+    "OK",
+    23.0,
+    "Bloober Team SA",
+    "WSE"
+   ]
+  ]
+ },
+ "50": {
+  "kod": "ZEPAK",
+  "cands": [
+   "ZEP.WA"
+  ],
+  "hit": [
+   "ZEP.WA",
+   [
+    "OK",
+    19.14,
+    "ZE PAK SA",
+    "WSE"
+   ]
+  ]
+ },
+ "51": {
+  "kod": "11BIT",
+  "cands": [
+   "11B.WA"
+  ],
+  "hit": [
+   "11B.WA",
+   [
+    "OK",
+    119.1,
+    "11 bit studios S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "52": {
+  "kod": "PLAYWAY",
+  "cands": [
+   "PLW.WA"
+  ],
+  "hit": [
+   "PLW.WA",
+   [
+    "OK",
+    250.0,
+    "PlayWay S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "53": {
+  "kod": "BOGDANKA",
+  "cands": [
+   "LWB.WA"
+  ],
+  "hit": [
+   "LWB.WA",
+   [
+    "OK",
+    25.15,
+    "Lubelski Wegiel Bogdanka S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "54": {
+  "kod": "SELENAFM",
+  "cands": [
+   "SEL.WA"
+  ],
+  "hit": [
+   "SEL.WA",
+   [
+    "OK",
+    56.2,
+    "Selena FM S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "55": {
+  "kod": "RYVU",
+  "cands": [
+   "RVU.WA"
+  ],
+  "hit": [
+   "RVU.WA",
+   [
+    "OK",
+    18.22,
+    "Ryvu Therapeutics S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "56": {
+  "kod": "BOS",
+  "cands": [
+   "BOS.WA"
+  ],
+  "hit": [
+   "BOS.WA",
+   [
+    "OK",
+    10.46,
+    "Bank Ochrony Srodowiska S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "57": {
+  "kod": "ASTARTA",
+  "cands": [
+   "AST.WA"
+  ],
+  "hit": [
+   "AST.WA",
+   [
+    "OK",
+    30.2,
+    "Astarta Holding PLC",
+    "WSE"
+   ]
+  ]
+ },
+ "58": {
+  "kod": "SCPFL",
+  "cands": [
+   "SCP.WA"
+  ],
+  "hit": [
+   "SCP.WA",
+   [
+    "OK",
+    154.2,
+    "Scope Fluidics S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "59": {
+  "kod": "TOYA",
+  "cands": [
+   "TOA.WA"
+  ],
+  "hit": [
+   "TOA.WA",
+   [
+    "OK",
+    11.42,
+    "TOYA S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "60": {
+  "kod": "AMICA",
+  "cands": [
+   "AMC.WA"
+  ],
+  "hit": [
+   "AMC.WA",
+   [
+    "OK",
+    44.45,
+    "Amica S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "61": {
+  "kod": "MEDICALG",
+  "cands": [
+   "MDG.WA"
+  ],
+  "hit": [
+   "MDG.WA",
+   [
+    "OK",
+    23.85,
+    "Medicalgorithmics S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "62": {
+  "kod": "UNIBEP",
+  "cands": [
+   "UNI.WA"
+  ],
+  "hit": [
+   "UNI.WA",
+   [
+    "OK",
+    15.12,
+    "UNIBEP S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "63": {
+  "kod": "CREEPYJAR",
+  "cands": [
+   "CRJ.WA"
+  ],
+  "hit": [
+   "CRJ.WA",
+   [
+    "OK",
+    359.0,
+    "Creepy Jar S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "64": {
+  "kod": "VOTUM",
+  "cands": [
+   "VOT.WA"
+  ],
+  "hit": [
+   "VOT.WA",
+   [
+    "OK",
+    40.0,
+    "Votum S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "65": {
+  "kod": "ARLEN",
+  "cands": [
+   "ARL.WA"
+  ],
+  "hit": [
+   "ARL.WA",
+   [
+    "OK",
+    23.0,
+    "Arlen S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "66": {
+  "kod": "FORTE",
+  "cands": [
+   "FTE.WA"
+  ],
+  "hit": [
+   "FTE.WA",
+   [
+    "OK",
+    14.05,
+    "Fabryki Mebli FORTE S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "67": {
+  "kod": "MOSTALZAB",
+  "cands": [
+   "MSZ.WA"
+  ],
+  "hit": [
+   "MSZ.WA",
+   [
+    "OK",
+    6.7,
+    "Mostostal Zabrze S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "68": {
+  "kod": "IMCOMPANY",
+  "cands": [
+   "IMC.WA"
+  ],
+  "hit": [
+   "IMC.WA",
+   [
+    "OK",
+    21.05,
+    "IMC S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "69": {
+  "kod": "MERCATOR",
+  "cands": [
+   "MRC.WA"
+  ],
+  "hit": [
+   "MRC.WA",
+   [
+    "OK",
+    59.3,
+    "Mercator Medical S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "70": {
+  "kod": "AMBRA",
+  "cands": [
+   "AMB.WA"
+  ],
+  "hit": [
+   "AMB.WA",
+   [
+    "OK",
+    18.7,
+    "Ambra S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "71": {
+  "kod": "ANSWEAR",
+  "cands": [
+   "ANR.WA"
+  ],
+  "hit": [
+   "ANR.WA",
+   [
+    "OK",
+    23.8,
+    "Answear.com S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "72": {
+  "kod": "STALEXP",
+  "cands": [
+   "STX.WA"
+  ],
+  "hit": [
+   "STX.WA",
+   [
+    "OK",
+    1.996,
+    "Stalexport Autostrady S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "73": {
+  "kod": "ONDE",
+  "cands": [
+   "OND.WA"
+  ],
+  "hit": [
+   "OND.WA",
+   [
+    "OK",
+    8.18,
+    "Onde S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "74": {
+  "kod": "BIOTON",
+  "cands": [
+   "BIO.WA"
+  ],
+  "hit": [
+   "BIO.WA",
+   [
+    "OK",
+    3.59,
+    "BIOTON S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "75": {
+  "kod": "ATREM",
+  "cands": [
+   "ATR.WA"
+  ],
+  "hit": [
+   "ATR.WA",
+   [
+    "OK",
+    54.2,
+    "Atrem S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "76": {
+  "kod": "ARCTIC",
+  "cands": [
+   "ATC.WA"
+  ],
+  "hit": [
+   "ATC.WA",
+   [
+    "OK",
+    5.6,
+    "Arctic Paper S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "77": {
+  "kod": "SNTVERSE",
+  "cands": [
+   "SNT.WA"
+  ],
+  "hit": [
+   "SNT.WA",
+   [
+    "OK",
+    330.4,
+    "Synektik Spólka Akcyjna",
+    "WSE"
+   ]
+  ]
+ },
+ "78": {
+  "kod": "WIELTON",
+  "cands": [
+   "WLT.WA"
+  ],
+  "hit": [
+   "WLT.WA",
+   [
+    "OK",
+    4.795,
+    "Wielton S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "79": {
+  "kod": "BUMECH",
+  "cands": [
+   "BMC.WA",
+   "BDF.WA"
+  ],
+  "hit": [
+   "BMC.WA",
+   [
+    "OK",
+    12.81,
+    "Bumech S.A.",
+    "WSE"
+   ]
+  ]
+ },
+ "80": {
+  "kod": "ZREMB",
+  "cands": [
+   "ZRE.WA"
+  ],
+  "hit": [
+   "ZRE.WA",
+   [
+    "OK",
+    8.31,
+    "Zaklad Budowy Maszyn ZREMB - Chojnice S.",
+    "WSE"
+   ]
+  ]
+ }
+}

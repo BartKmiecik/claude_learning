@@ -1,0 +1,551 @@
+{
+ "1": {
+  "kod": "COMP",
+  "isin": "PLCMP0000017",
+  "cands": []
+ },
+ "2": {
+  "kod": "ASSECOBS",
+  "isin": "PLABS0000018",
+  "cands": [
+   "ABS.WA"
+  ]
+ },
+ "3": {
+  "kod": "MLPGROUP",
+  "isin": "PLMLPGR00017",
+  "cands": [
+   "MLG.WA"
+  ]
+ },
+ "4": {
+  "kod": "TORPOL",
+  "isin": "PLTORPL00016",
+  "cands": [
+   "TOR.WA"
+  ]
+ },
+ "5": {
+  "kod": "ROBYG",
+  "isin": "PLROBYG00321",
+  "cands": [
+   "ROB.WA"
+  ]
+ },
+ "6": {
+  "kod": "ECHO",
+  "isin": "PLECHPS00019",
+  "cands": [
+   "ECH.WA"
+  ]
+ },
+ "7": {
+  "kod": "ARCHICOM",
+  "isin": "PLARHCM00016",
+  "cands": [
+   "ARH.WA"
+  ]
+ },
+ "8": {
+  "kod": "MENNICA",
+  "isin": "PLMNNCP00011",
+  "cands": [
+   "MNC.WA"
+  ]
+ },
+ "9": {
+  "kod": "VRG",
+  "isin": "PLVSTLA00011",
+  "cands": []
+ },
+ "10": {
+  "kod": "FERRO",
+  "isin": "PLFERRO00016",
+  "cands": []
+ },
+ "11": {
+  "kod": "DATAWALK",
+  "isin": "PLPILAB00012",
+  "cands": [
+   "DAT.WA"
+  ]
+ },
+ "12": {
+  "kod": "MEDINICE",
+  "isin": "PLMDNCE00016",
+  "cands": [
+   "ICE.WA"
+  ]
+ },
+ "13": {
+  "kod": "COGNOR",
+  "isin": "PLCNTSL00014",
+  "cands": [
+   "COG.WA"
+  ]
+ },
+ "14": {
+  "kod": "APATOR",
+  "isin": "PLAPATR00018",
+  "cands": [
+   "APT.WA"
+  ]
+ },
+ "15": {
+  "kod": "DIGITANET",
+  "isin": "PL4FNMD00013",
+  "cands": [
+   "DIG.WA"
+  ]
+ },
+ "16": {
+  "kod": "ENTER",
+  "isin": "PLENTER00017",
+  "cands": [
+   "ENT.WA"
+  ]
+ },
+ "17": {
+  "kod": "ATAL",
+  "isin": "PLATAL000046",
+  "cands": [
+   "1AT.WA"
+  ]
+ },
+ "18": {
+  "kod": "OPONEO.PL",
+  "isin": "PLOPNPL00013",
+  "cands": [
+   "OPN.WA"
+  ]
+ },
+ "19": {
+  "kod": "CRQUANTUM",
+  "isin": "PLCTHQM00018",
+  "cands": [
+   "CRI.WA",
+   "CRQ.WA"
+  ]
+ },
+ "20": {
+  "kod": "ELEKTROTI",
+  "isin": "PLELEKT00016",
+  "cands": [
+   "ELT.WA"
+  ]
+ },
+ "21": {
+  "kod": "HUUUGE",
+  "isin": "US44853H1086",
+  "cands": [
+   "HUG.WA"
+  ]
+ },
+ "22": {
+  "kod": "CLNPHARMA",
+  "isin": "PLCLNPH00015",
+  "cands": [
+   "CLN.WA"
+  ]
+ },
+ "23": {
+  "kod": "UNIMOT",
+  "isin": "PLUNMOT00013",
+  "cands": [
+   "UNT.WA"
+  ]
+ },
+ "24": {
+  "kod": "SNIEZKA",
+  "isin": "PLSNZKA00033",
+  "cands": [
+   "SKA.WA"
+  ]
+ },
+ "25": {
+  "kod": "KOGENERA",
+  "isin": "PLKGNRC00015",
+  "cands": [
+   "KGN.WA"
+  ]
+ },
+ "26": {
+  "kod": "SELVITA",
+  "isin": "PLSLVCR00029",
+  "cands": [
+   "SLV.WA"
+  ]
+ },
+ "27": {
+  "kod": "REX",
+  "isin": "PLRXCNC00017",
+  "cands": [
+   "REX.WA"
+  ]
+ },
+ "28": {
+  "kod": "DECORA",
+  "isin": "PLDECOR00013",
+  "cands": []
+ },
+ "29": {
+  "kod": "GREENX",
+  "isin": "AU0000198939",
+  "cands": []
+ },
+ "30": {
+  "kod": "NIEWIADOW",
+  "isin": "PLVNTCP00019",
+  "cands": []
+ },
+ "31": {
+  "kod": "PCCROKITA",
+  "isin": "PLPCCRK00076",
+  "cands": [
+   "PCR.WA"
+  ]
+ },
+ "32": {
+  "kod": "QUERCUS",
+  "isin": "PLQRCUS00012",
+  "cands": [
+   "QRS.WA",
+   "QMULTIFIZ.WA"
+  ]
+ },
+ "33": {
+  "kod": "MCI",
+  "isin": "PLMCIMG00012",
+  "cands": [
+   "MCI.WA"
+  ]
+ },
+ "34": {
+  "kod": "VIGOPHOTN",
+  "isin": "PLVIGOS00015",
+  "cands": [
+   "VGO.WA"
+  ]
+ },
+ "35": {
+  "kod": "SYGNITY",
+  "isin": "PLCMPLD00016",
+  "cands": [
+   "SGN.WA"
+  ]
+ },
+ "36": {
+  "kod": "WAWEL",
+  "isin": "PLWAWEL00013",
+  "cands": [
+   "WWL.WA"
+  ]
+ },
+ "37": {
+  "kod": "STALPROD",
+  "isin": "PLSTLPD00017",
+  "cands": [
+   "STP.WA"
+  ]
+ },
+ "38": {
+  "kod": "SCANWAY",
+  "isin": "PLSCWAY00018",
+  "cands": [
+   "SCW.WA"
+  ]
+ },
+ "39": {
+  "kod": "EUROCASH",
+  "isin": "PLEURCH00011",
+  "cands": [
+   "EUR.WA"
+  ]
+ },
+ "40": {
+  "kod": "TARCZYNSKI",
+  "isin": "PLTRCZN00016",
+  "cands": [
+   "TAR.WA"
+  ]
+ },
+ "41": {
+  "kod": "SANOK",
+  "isin": "PLSTLSK00016",
+  "cands": [
+   "SNK.WA"
+  ]
+ },
+ "42": {
+  "kod": "BIOCELTIX",
+  "isin": "PLBCLTX00019",
+  "cands": [
+   "BCX.WA"
+  ]
+ },
+ "43": {
+  "kod": "CAPTORTX",
+  "isin": "PLCPTRT00014",
+  "cands": [
+   "CTX.WA"
+  ]
+ },
+ "44": {
+  "kod": "DADELO",
+  "isin": "PLDADEL00013",
+  "cands": [
+   "DAD.WA"
+  ]
+ },
+ "45": {
+  "kod": "CIGAMES",
+  "isin": "PLCTINT00018",
+  "cands": [
+   "CIG.WA"
+  ]
+ },
+ "46": {
+  "kod": "SYN2BIO",
+  "isin": "PLSNBIO00013",
+  "cands": [
+   "S2B.WA"
+  ]
+ },
+ "47": {
+  "kod": "AGORA",
+  "isin": "PLAGORA00067",
+  "cands": [
+   "AGO.WA"
+  ]
+ },
+ "48": {
+  "kod": "BORYSZEW",
+  "isin": "PLBRSZW00011",
+  "cands": [
+   "BRS.WA"
+  ]
+ },
+ "49": {
+  "kod": "BLOOBER",
+  "isin": "PLBLOBR00014",
+  "cands": [
+   "BLO.WA"
+  ]
+ },
+ "50": {
+  "kod": "ZEPAK",
+  "isin": "PLZEPAK00012",
+  "cands": [
+   "ZEP.WA"
+  ]
+ },
+ "51": {
+  "kod": "11BIT",
+  "isin": "PL11BTS00015",
+  "cands": [
+   "11B.WA"
+  ]
+ },
+ "52": {
+  "kod": "PLAYWAY",
+  "isin": "PLPLAYW00015",
+  "cands": [
+   "PLW.WA"
+  ]
+ },
+ "53": {
+  "kod": "BOGDANKA",
+  "isin": "PLLWBGD00016",
+  "cands": [
+   "LWB.WA"
+  ]
+ },
+ "54": {
+  "kod": "SELENAFM",
+  "isin": "PLSELNA00010",
+  "cands": [
+   "SEL.WA"
+  ]
+ },
+ "55": {
+  "kod": "RYVU",
+  "isin": "PLSELVT00013",
+  "cands": [
+   "RVU.WA"
+  ]
+ },
+ "56": {
+  "kod": "BOS",
+  "isin": "PLBOS0000019",
+  "cands": [
+   "BOS.WA"
+  ]
+ },
+ "57": {
+  "kod": "ASTARTA",
+  "isin": "NL0000686509",
+  "cands": [
+   "AST.WA"
+  ]
+ },
+ "58": {
+  "kod": "SCPFL",
+  "isin": "PLSCPFL00018",
+  "cands": [
+   "SCP.WA"
+  ]
+ },
+ "59": {
+  "kod": "TOYA",
+  "isin": "PLTOYA000011",
+  "cands": [
+   "TOA.WA"
+  ]
+ },
+ "60": {
+  "kod": "AMICA",
+  "isin": "PLAMICA00010",
+  "cands": [
+   "AMC.WA"
+  ]
+ },
+ "61": {
+  "kod": "MEDICALG",
+  "isin": "PLMDCLG00015",
+  "cands": [
+   "MDG.WA"
+  ]
+ },
+ "62": {
+  "kod": "UNIBEP",
+  "isin": "PLUNBEP00015",
+  "cands": [
+   "UNI.WA"
+  ]
+ },
+ "63": {
+  "kod": "CREEPYJAR",
+  "isin": "PLCRPJR00019",
+  "cands": [
+   "CRJ.WA"
+  ]
+ },
+ "64": {
+  "kod": "VOTUM",
+  "isin": "PLVOTUM00016",
+  "cands": [
+   "VOT.WA"
+  ]
+ },
+ "65": {
+  "kod": "ARLEN",
+  "isin": "PLARLEN00012",
+  "cands": [
+   "ARL.WA"
+  ]
+ },
+ "66": {
+  "kod": "FORTE",
+  "isin": "PLFORTE00012",
+  "cands": [
+   "FTE.WA"
+  ]
+ },
+ "67": {
+  "kod": "MOSTALZAB",
+  "isin": "PLMSTZB00018",
+  "cands": [
+   "MSZ.WA"
+  ]
+ },
+ "68": {
+  "kod": "IMCOMPANY",
+  "isin": "LU0607203980",
+  "cands": []
+ },
+ "69": {
+  "kod": "MERCATOR",
+  "isin": "PLMRCTR00015",
+  "cands": [
+   "MRC.WA"
+  ]
+ },
+ "70": {
+  "kod": "AMBRA",
+  "isin": "PLAMBRA00013",
+  "cands": [
+   "AMB.WA"
+  ]
+ },
+ "71": {
+  "kod": "ANSWEAR",
+  "isin": "PLANSWR00019",
+  "cands": [
+   "ANR.WA"
+  ]
+ },
+ "72": {
+  "kod": "STALEXP",
+  "isin": "PLSTLEX00019",
+  "cands": [
+   "STX.WA"
+  ]
+ },
+ "73": {
+  "kod": "ONDE",
+  "isin": "PLONDE000018",
+  "cands": [
+   "OND.WA"
+  ]
+ },
+ "74": {
+  "kod": "BIOTON",
+  "isin": "PLBIOTN00029",
+  "cands": [
+   "BIO.WA"
+  ]
+ },
+ "75": {
+  "kod": "ATREM",
+  "isin": "PLATREM00017",
+  "cands": [
+   "ATR.WA"
+  ]
+ },
+ "76": {
+  "kod": "ARCTIC",
+  "isin": "PLARTPR00012",
+  "cands": [
+   "ATC.WA"
+  ]
+ },
+ "77": {
+  "kod": "SNTVERSE",
+  "isin": "PLBMDLB00018",
+  "cands": [
+   "SNT.WA"
+  ]
+ },
+ "78": {
+  "kod": "WIELTON",
+  "isin": "PLWELTN00012",
+  "cands": [
+   "WLT.WA"
+  ]
+ },
+ "79": {
+  "kod": "BUMECH",
+  "isin": "PLBMECH00012",
+  "cands": [
+   "BMC.WA",
+   "BDF.WA"
+  ]
+ },
+ "80": {
+  "kod": "ZREMB",
+  "isin": "PLZBMZC00019",
+  "cands": [
+   "ZRE.WA"
+  ]
+ }
+}

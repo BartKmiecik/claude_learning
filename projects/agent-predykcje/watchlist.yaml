@@ -1,9 +1,332 @@
-# Watchlista agenta predykcji. Symbole zweryfikowane 2026-10-27.
+# Watchlista agenta predykcji. Symbole zweryfikowane 2026-10-27; sklad sWIG80 po korekcie 18.09.2026 (recon 2026-10-28).
 stocks:
-  - PKO.WA
-  - PZU.WA
-  - PKN.WA
+- PKO.WA
+- PZU.WA
+- PKN.WA
 indices:
-  - WIG20.WA
-  - WIG.WA
-  - MWIG40.WA
+- WIG20.WA
+- WIG.WA
+- MWIG40.WA
+swig80:
+- symbol: CMP.WA
+  ticker: CMP
+  name: Comp S.A.
+  isin: PLCMP0000017
+- symbol: ABS.WA
+  ticker: ABS
+  name: Asseco Business Solutions S.A.
+  isin: PLABS0000018
+- symbol: MLG.WA
+  ticker: MLG
+  name: MLP Group S.A.
+  isin: PLMLPGR00017
+- symbol: TOR.WA
+  ticker: TOR
+  name: Torpol S.A.
+  isin: PLTORPL00016
+- symbol: ROB.WA
+  ticker: ROB
+  name: Robyg S.A.
+  isin: PLROBYG00321
+- symbol: ECH.WA
+  ticker: ECH
+  name: Echo Investment S.A.
+  isin: PLECHPS00019
+- symbol: ARH.WA
+  ticker: ARH
+  name: Archicom S.A.
+  isin: PLARHCM00016
+- symbol: MNC.WA
+  ticker: MNC
+  name: Mennica Polska S.A.
+  isin: PLMNNCP00011
+- symbol: VRG.WA
+  ticker: VRG
+  name: VRG S.A.
+  isin: PLVSTLA00011
+- symbol: FRO.WA
+  ticker: FRO
+  name: FERRO S.A.
+  isin: PLFERRO00016
+- symbol: DAT.WA
+  ticker: DAT
+  name: DataWalk S.A.
+  isin: PLPILAB00012
+- symbol: ICE.WA
+  ticker: ICE
+  name: Medinice S.A.
+  isin: PLMDNCE00016
+- symbol: COG.WA
+  ticker: COG
+  name: Cognor Holding S.A.
+  isin: PLCNTSL00014
+- symbol: APT.WA
+  ticker: APT
+  name: Apator S.A.
+  isin: PLAPATR00018
+- symbol: DIG.WA
+  ticker: DIG
+  name: Digital Network SA
+  isin: PL4FNMD00013
+- symbol: ENT.WA
+  ticker: ENT
+  name: Enter Air S.A.
+  isin: PLENTER00017
+- symbol: 1AT.WA
+  ticker: 1AT
+  name: Atal S.A.
+  isin: PLATAL000046
+- symbol: OPN.WA
+  ticker: OPN
+  name: Oponeo.pl S.A.
+  isin: PLOPNPL00013
+- symbol: CRQ.WA
+  ticker: CRQ
+  name: Creotech Quantum S.A.
+  isin: PLCTHQM00018
+- symbol: ELT.WA
+  ticker: ELT
+  name: Elektrotim S.A.
+  isin: PLELEKT00016
+- symbol: HUG.WA
+  ticker: HUU
+  name: Huuuge, Inc.
+  isin: US44853H1086
+- symbol: CLN.WA
+  ticker: CLN
+  name: Celon Pharma S.A.
+  isin: PLCLNPH00015
+- symbol: UNT.WA
+  ticker: UNT
+  name: Unimot S.A.
+  isin: PLUNMOT00013
+- symbol: SKA.WA
+  ticker: SKA
+  name: Fabryka Farb i Lakierów Sniezka SA
+  isin: PLSNZKA00033
+- symbol: KGN.WA
+  ticker: KGN
+  name: Zespól Elektrocieplowni Wroclawskich KOG
+  isin: PLKGNRC00015
+- symbol: SLV.WA
+  ticker: SLV
+  name: Selvita S.A.
+  isin: PLSLVCR00029
+- symbol: REX.WA
+  ticker: REX
+  name: Rex Concepts S.A.
+  isin: PLRXCNC00017
+- symbol: DCR.WA
+  ticker: DCR
+  name: Decora S.A.
+  isin: PLDECOR00013
+- symbol: GRX.WA
+  ticker: GRX
+  name: GreenX Metals Limited
+  isin: AU0000198939
+- symbol: null
+  ticker: null
+  name: Niewiadow
+  isin: PLVNTCP00019
+  skipped: true
+  reason: brak notowania na Yahoo (GPW)
+- symbol: PCR.WA
+  ticker: PCR
+  name: PCC Rokita SA
+  isin: PLPCCRK00076
+- symbol: QRS.WA
+  ticker: QRS
+  name: Quercus TFI S.A.
+  isin: PLQRCUS00012
+- symbol: MCI.WA
+  ticker: MCI
+  name: MCI Capital Alternatywna Spólka Inwestyc
+  isin: PLMCIMG00012
+- symbol: VGO.WA
+  ticker: VGO
+  name: VIGO Photonics S.A.
+  isin: PLVIGOS00015
+- symbol: SGN.WA
+  ticker: SGN
+  name: Sygnity S.A.
+  isin: PLCMPLD00016
+- symbol: WWL.WA
+  ticker: WWL
+  name: Wawel S.A.
+  isin: PLWAWEL00013
+- symbol: STP.WA
+  ticker: STP
+  name: Stalprodukt S.A.
+  isin: PLSTLPD00017
+- symbol: SCW.WA
+  ticker: SCW
+  name: Scanway S.A.
+  isin: PLSCWAY00018
+- symbol: EUR.WA
+  ticker: EUR
+  name: Eurocash S.A.
+  isin: PLEURCH00011
+- symbol: TAR.WA
+  ticker: TAR
+  name: Tarczynski S.A.
+  isin: PLTRCZN00016
+- symbol: SNK.WA
+  ticker: SNK
+  name: Sanok Rubber Company Spólka Akcyjna
+  isin: PLSTLSK00016
+- symbol: BCX.WA
+  ticker: BCX
+  name: Bioceltix S.A.
+  isin: PLBCLTX00019
+- symbol: CTX.WA
+  ticker: CTX
+  name: Captor Therapeutics Spolka Akcyjna
+  isin: PLCPTRT00014
+- symbol: DAD.WA
+  ticker: DAD
+  name: Dadelo S.A.
+  isin: PLDADEL00013
+- symbol: CIG.WA
+  ticker: CIG
+  name: CI Games SE
+  isin: PLCTINT00018
+- symbol: S2B.WA
+  ticker: S2B
+  name: Syn2bio S.A.
+  isin: PLSNBIO00013
+- symbol: AGO.WA
+  ticker: AGO
+  name: Agora S.A.
+  isin: PLAGORA00067
+- symbol: BRS.WA
+  ticker: BRS
+  name: Boryszew S.A.
+  isin: PLBRSZW00011
+- symbol: BLO.WA
+  ticker: BLO
+  name: Bloober Team SA
+  isin: PLBLOBR00014
+- symbol: ZEP.WA
+  ticker: ZEP
+  name: ZE PAK SA
+  isin: PLZEPAK00012
+- symbol: 11B.WA
+  ticker: 11B
+  name: 11 bit studios S.A.
+  isin: PL11BTS00015
+- symbol: PLW.WA
+  ticker: PLW
+  name: PlayWay S.A.
+  isin: PLPLAYW00015
+- symbol: LWB.WA
+  ticker: LWB
+  name: Lubelski Wegiel Bogdanka S.A.
+  isin: PLLWBGD00016
+- symbol: SEL.WA
+  ticker: SEL
+  name: Selena FM S.A.
+  isin: PLSELNA00010
+- symbol: RVU.WA
+  ticker: RVU
+  name: Ryvu Therapeutics S.A.
+  isin: PLSELVT00013
+- symbol: BOS.WA
+  ticker: BOS
+  name: Bank Ochrony Srodowiska S.A.
+  isin: PLBOS0000019
+- symbol: AST.WA
+  ticker: AST
+  name: Astarta Holding PLC
+  isin: NL0000686509
+- symbol: SCP.WA
+  ticker: SCP
+  name: Scope Fluidics S.A.
+  isin: PLSCPFL00018
+- symbol: TOA.WA
+  ticker: TOA
+  name: TOYA S.A.
+  isin: PLTOYA000011
+- symbol: AMC.WA
+  ticker: AMC
+  name: Amica S.A.
+  isin: PLAMICA00010
+- symbol: MDG.WA
+  ticker: MDG
+  name: Medicalgorithmics S.A.
+  isin: PLMDCLG00015
+- symbol: UNI.WA
+  ticker: UNI
+  name: UNIBEP S.A.
+  isin: PLUNBEP00015
+- symbol: CRJ.WA
+  ticker: CRJ
+  name: Creepy Jar S.A.
+  isin: PLCRPJR00019
+- symbol: VOT.WA
+  ticker: VOT
+  name: Votum S.A.
+  isin: PLVOTUM00016
+- symbol: ARL.WA
+  ticker: ARL
+  name: Arlen S.A.
+  isin: PLARLEN00012
+- symbol: FTE.WA
+  ticker: FTE
+  name: Fabryki Mebli FORTE S.A.
+  isin: PLFORTE00012
+- symbol: MSZ.WA
+  ticker: MSZ
+  name: Mostostal Zabrze S.A.
+  isin: PLMSTZB00018
+- symbol: IMC.WA
+  ticker: IMC
+  name: IMC S.A.
+  isin: LU0607203980
+- symbol: MRC.WA
+  ticker: MRC
+  name: Mercator Medical S.A.
+  isin: PLMRCTR00015
+- symbol: AMB.WA
+  ticker: AMB
+  name: Ambra S.A.
+  isin: PLAMBRA00013
+- symbol: ANR.WA
+  ticker: ANR
+  name: Answear.com S.A.
+  isin: PLANSWR00019
+- symbol: STX.WA
+  ticker: STX
+  name: Stalexport Autostrady S.A.
+  isin: PLSTLEX00019
+- symbol: OND.WA
+  ticker: OND
+  name: Onde S.A.
+  isin: PLONDE000018
+- symbol: BIO.WA
+  ticker: BIO
+  name: BIOTON S.A.
+  isin: PLBIOTN00029
+- symbol: ATR.WA
+  ticker: ATR
+  name: Atrem S.A.
+  isin: PLATREM00017
+- symbol: ATC.WA
+  ticker: ATC
+  name: Arctic Paper S.A.
+  isin: PLARTPR00012
+- symbol: SNT.WA
+  ticker: SNT
+  name: Synektik Spólka Akcyjna
+  isin: PLBMDLB00018
+- symbol: WLT.WA
+  ticker: WLT
+  name: Wielton S.A.
+  isin: PLWELTN00012
+- symbol: BMC.WA
+  ticker: BMC
+  name: Bumech S.A.
+  isin: PLBMECH00012
+- symbol: ZRE.WA
+  ticker: ZRE
+  name: Zaklad Budowy Maszyn ZREMB - Chojnice S.
+  isin: PLZBMZC00019
