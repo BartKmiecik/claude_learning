@@ -39,12 +39,17 @@ def test_all_symbols_includes_swig80():
     wl = {
         "stocks": ["PKO.WA"],
         "indices": ["WIG20.WA"],
-        "swig80": [{"symbol": "CMP.WA"}, {"symbol": None, "skipped": True}],
+        "swig80": [
+            {"symbol": "CMP.WA"},
+            {"symbol": "ABS.WA", "skipped": True},
+            {"symbol": None},
+        ],
     }
-    symbols = [i["symbol"] for i in all_symbols(wl)]
-    assert "CMP.WA" in symbols
-    kinds = {i["symbol"]: i["kind"] for i in all_symbols(wl)}
-    assert kinds["CMP.WA"] == "stock"
+    assert all_symbols(wl) == [
+        {"symbol": "PKO.WA", "kind": "stock"},
+        {"symbol": "WIG20.WA", "kind": "index"},
+        {"symbol": "CMP.WA", "kind": "stock"},
+    ]
 
 
 def test_swig80_entries_returns_full_section():

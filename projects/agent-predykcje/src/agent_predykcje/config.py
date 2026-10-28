@@ -15,7 +15,9 @@ def load_watchlist(path) -> dict:
     with open(path, encoding="utf-8") as f:
         watchlist = yaml.safe_load(f)
     if not isinstance(watchlist, dict):
-        raise yaml.YAMLError("plik musi zawierać mapę z sekcjami 'stocks' i 'indices'")
+        raise yaml.YAMLError(
+            "plik musi zawierać mapę z sekcjami 'stocks', 'indices' i 'swig80'"
+        )
     return watchlist
 
 
