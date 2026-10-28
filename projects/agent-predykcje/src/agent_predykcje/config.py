@@ -6,7 +6,7 @@ import yaml
 
 
 def load_watchlist(path) -> dict:
-    """Load watchlist.yaml — dict with sections 'stocks' and 'indices'.
+    """Load watchlist.yaml — dict with sections 'stocks', 'indices' and 'swig80'.
 
     An empty file (safe_load -> None) or any non-mapping document raises
     yaml.YAMLError, so the CLI reports a corrupt watchlist instead of
@@ -15,20 +15,31 @@ def load_watchlist(path) -> dict:
     with open(path, encoding="utf-8") as f:
         watchlist = yaml.safe_load(f)
     if not isinstance(watchlist, dict):
-        raise yaml.YAMLError(
-            "plik musi zawierać mapę z sekcjami 'stocks' i 'indices'"
-        )
+        raise yaml.YAMLError("plik musi zawierać mapę z sekcjami 'stocks' i 'indices'")
     return watchlist
 
 
 def all_symbols(watchlist: dict) -> list:
-    """Flatten the watchlist into [{'symbol', 'kind'}], in section order."""
+    """Flatten the watchlist into [{'symbol', 'kind'}], in section order.
+
+    'stocks' and 'indices' hold plain symbols; 'swig80' holds dict entries,
+    and skipped ones (or entries without a symbol) are dropped.
+    """
     kind_by_section = {"stocks": "stock", "indices": "index"}
     items = []
     for section, kind in kind_by_section.items():
         for symbol in watchlist.get(section, []) or []:
             items.append({"symbol": symbol, "kind": kind})
+    for entry in watchlist.get("swig80", []) or []:
+        if entry.get("skipped") or entry.get("symbol") is None:
+            continue
+        items.append({"symbol": entry["symbol"], "kind": "stock"})
     return items
+
+
+def swig80_entries(watchlist: dict) -> list:
+    """Return the raw 'swig80' section, including entries marked skipped."""
+    return watchlist.get("swig80", []) or []
 
 
 def persona_paths(personas_dir) -> list[Path]:

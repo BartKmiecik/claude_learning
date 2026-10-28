@@ -1,7 +1,12 @@
 import pytest
 import yaml
 
-from agent_predykcje.config import all_symbols, load_watchlist, persona_paths
+from agent_predykcje.config import (
+    all_symbols,
+    load_watchlist,
+    persona_paths,
+    swig80_entries,
+)
 
 
 def test_load_watchlist_reads_stocks_and_indices(tmp_path):
@@ -28,6 +33,24 @@ def test_all_symbols_flattens_in_section_order():
         {"symbol": "WIG20.WA", "kind": "index"},
         {"symbol": "WIG.WA", "kind": "index"},
     ]
+
+
+def test_all_symbols_includes_swig80():
+    wl = {
+        "stocks": ["PKO.WA"],
+        "indices": ["WIG20.WA"],
+        "swig80": [{"symbol": "CMP.WA"}, {"symbol": None, "skipped": True}],
+    }
+    symbols = [i["symbol"] for i in all_symbols(wl)]
+    assert "CMP.WA" in symbols
+    kinds = {i["symbol"]: i["kind"] for i in all_symbols(wl)}
+    assert kinds["CMP.WA"] == "stock"
+
+
+def test_swig80_entries_returns_full_section():
+    skipped = {"symbol": None, "skipped": True, "reason": "brak notowania"}
+    wl = {"swig80": [{"symbol": "CMP.WA"}, skipped]}
+    assert swig80_entries(wl) == [{"symbol": "CMP.WA"}, skipped]
 
 
 def test_persona_paths_sorted_yaml(tmp_path):
