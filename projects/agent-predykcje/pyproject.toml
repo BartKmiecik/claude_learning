@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent-predykcje"
+version = "0.1.0"
+description = "Training project: 10 persona-driven LLM agents predicting GPW prices"
+requires-python = ">=3.10"
+dependencies = [
+    "pandas>=2.0",
+    "requests>=2.31",
+    "feedparser>=6.0",
+    "pyyaml>=6.0",
+    "plotly>=5.18",
+    "anthropic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "black>=24.0"]
+
+[project.scripts]
+agent-predykcje = "agent_predykcje.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "tests"]
+testpaths = ["tests"]
+addopts = "-m 'not live'"
+markers = ["live: live smoke tests — run manually with `pytest -m live`"]

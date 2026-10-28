@@ -1,0 +1,9 @@
+# Watchlista agenta predykcji. Symbole zweryfikowane 2026-10-27.
+stocks:
+  - PKO.WA
+  - PZU.WA
+  - PKN.WA
+indices:
+  - WIG20.WA
+  - WIG.WA
+  - MWIG40.WA
