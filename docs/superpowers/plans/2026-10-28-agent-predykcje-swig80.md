@@ -398,7 +398,7 @@ Dodaj: tryb `swig80` (domyślny) vs `--universe watchlist`; opis screeningu (8 s
 - [ ] **Step 2: Pełna weryfikacja**
 
 Run: `.venv/Scripts/python.exe -m pytest -q` → oczekiwane: wszystkie przechodzą (63 dotychczasowe + nowe).
-Run: `.venv/Scripts/python.exe -m black --check src tests scripts` → oczekiwane: bez zmian do sformatowania.
+Run: `.venv/Scripts/python.exe -m black src tests scripts` → sformatuj całość (venv ma black 26.x — pliki z mastera sformatowane black 24.x zostaną przeflowane; to celowe, patrz Ruling 2 w ledgerze SDD). Commit reformatu jako osobny commit `style(agent-predykcje): normalize formatting with current black` (jeśli black coś zmienił).
 
 - [ ] **Step 3: Commit**
 
