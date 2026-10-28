@@ -107,8 +107,10 @@ Wzory (standardowe definicje): SMA = `close.rolling(w).mean()`; MACD(12,26,9) na
 
 ```python
 def test_score_frame_uptrend():
-    # 100 rosnących closes: 100, 101, ..., 199 → wszystkie sygnały True oprócz RSI
-    df = pd.DataFrame({"date": [...], "close": range(100, 200)})
+    # 99 dni rosnących 100..198 + skok ostatniego dnia do 250
+    # (liniowy ramp NIE przebija SMA20+2σ — wstęga wymaga outliera);
+    # → wszystkie sygnały True oprócz RSI (RSI = 100 przy samych wzrostach)
+    df = pd.DataFrame({"date": [...], "close": [...]})
     s = score_frame(df)
     assert s["signals"]["price_above_sma20"] is True
     assert s["signals"]["price_above_sma50"] is True
