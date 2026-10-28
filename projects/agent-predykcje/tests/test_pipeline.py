@@ -73,6 +73,37 @@ def test_load_price_frame_sorted_and_missing_raises(tmp_path):
         load_price_frame(data_dir, "PZU.WA")
 
 
+def test_run_analysis_custom_stocks(tmp_path, monkeypatch):
+    """`stocks=[...]` overrides watchlist["stocks"] — predictions exactly
+    for the given symbols."""
+    frame = _write_price_csv(tmp_path / "data", "PKO.WA")
+    personas_dir = tmp_path / "personas"
+    _write_personas(personas_dir)
+
+    def fake_predict(
+        persona_prompt, user_message, anchor_price, client=None, model=None
+    ):
+        return _ok_result()
+
+    monkeypatch.setattr("agent_predykcje.pipeline.predict_stock", fake_predict)
+    snapshot = run_analysis(
+        {"stocks": [], "indices": []},
+        tmp_path / "data",
+        personas_dir,
+        client=object(),
+        model="m",
+        stocks=["PKO.WA"],
+    )
+    assert len(snapshot["stocks"]) == 1
+    stock = snapshot["stocks"][0]
+    assert stock["symbol"] == "PKO.WA"
+    assert stock["anchor"] == {
+        "date": frame["date"].iloc[-1],
+        "price": float(frame["close"].iloc[-1]),
+    }
+    assert [a["status"] for a in stock["agents"]] == ["ok", "ok"]
+
+
 def test_run_analysis_one_agent_error(tmp_path, monkeypatch):
     frame = _write_price_csv(tmp_path / "data", "PKO.WA")
     personas_dir = tmp_path / "personas"

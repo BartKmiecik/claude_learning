@@ -8,6 +8,7 @@ code (1, or 130 for Ctrl-C) — never a raw traceback.
 """
 
 import argparse
+import os
 import sys
 import webbrowser
 from pathlib import Path
@@ -16,15 +17,17 @@ import yaml
 
 from agent_predykcje.agent import AgentError
 from agent_predykcje.collector import CollectorError, collect
-from agent_predykcje.config import load_watchlist, persona_paths
+from agent_predykcje.config import load_watchlist, persona_paths, swig80_entries
 from agent_predykcje.news import NEWS_FEEDS, fetch_news, save_news
 from agent_predykcje.pipeline import (
+    load_price_frame,
     load_snapshot,
     latest_snapshot,
     run_analysis,
     save_snapshot,
 )
 from agent_predykcje.report import render_report
+from agent_predykcje.screen import screen_universe
 
 PROJECT_DIR = (
     Path(__file__).resolve().parent.parent.parent
@@ -74,9 +77,38 @@ def cmd_analyze(args) -> int:
             file=sys.stderr,
         )
         return 1
+
+    stocks = None
+    screen = None
+    env_stocks = os.environ.get("AGENT_PREDYKCJE_LIVE_STOCKS")
+    if env_stocks:
+        stocks = [symbol.strip() for symbol in env_stocks.split(",") if symbol.strip()]
+    elif args.universe == "swig80":
+        frames = {}
+        for entry in swig80_entries(watchlist):
+            symbol = entry.get("symbol")
+            if not symbol:
+                continue
+            try:
+                frames[symbol] = load_price_frame(_data_dir(), symbol)
+            except FileNotFoundError:
+                continue
+        screen = screen_universe(swig80_entries(watchlist), frames)
+        stocks = screen["selected"]
+        print(
+            f"Screening: wybrano {len(screen['selected'])} spółek z "
+            f"{len(screen['rows'])} pozycji."
+        )
+
     snapshot = run_analysis(
-        watchlist, _data_dir(), _personas_dir(), model=getattr(args, "model", None)
+        watchlist,
+        _data_dir(),
+        _personas_dir(),
+        model=getattr(args, "model", None),
+        stocks=stocks,
     )
+    if screen is not None:
+        snapshot["screen"] = screen
     total = len(personas)
     for stock in snapshot["stocks"]:
         ok = sum(1 for agent in stock["agents"] if agent.get("status") == "ok")
@@ -124,6 +156,12 @@ def main(argv=None) -> int:
         default=None,
         help="model Claude (domyślnie: zmienna AGENT_PREDYKCJE_MODEL lub claude-opus-5-5)",
     )
+    p_analyze.add_argument(
+        "--universe",
+        choices=["swig80", "watchlist"],
+        default="swig80",
+        help="uniwersum analizy: swig80 (screening sWIG80) lub watchlist (sekcja 'stocks')",
+    )
     p_report = sub.add_parser(
         "report", help="wygeneruj raport HTML i otwórz go w przeglądarce"
     )
@@ -138,6 +176,12 @@ def main(argv=None) -> int:
         "--model",
         default=None,
         help="model Claude (domyślnie: zmienna AGENT_PREDYKCJE_MODEL lub claude-opus-5-5)",
+    )
+    p_run.add_argument(
+        "--universe",
+        choices=["swig80", "watchlist"],
+        default="swig80",
+        help="uniwersum analizy: swig80 (screening sWIG80) lub watchlist (sekcja 'stocks')",
     )
     args = parser.parse_args(argv)
     handlers = {

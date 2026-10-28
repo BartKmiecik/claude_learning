@@ -7,6 +7,8 @@ namespace, so `cli.py` must call them as module-level names.
 
 import json
 
+import pandas as pd
+
 from agent_predykcje import cli
 from agent_predykcje.agent import AgentError
 
@@ -20,6 +22,17 @@ def _write_watchlist(tmp_path):
     """Write a minimal watchlist.yaml fixture and return its path."""
     path = tmp_path / "watchlist.yaml"
     path.write_text("stocks:\n  - PKO.WA\nindices: []\n", encoding="utf-8")
+    return path
+
+
+def _write_swig80_watchlist(tmp_path):
+    """Write a watchlist.yaml with only a swig80 section."""
+    path = tmp_path / "watchlist.yaml"
+    path.write_text(
+        "stocks: []\nindices: []\nswig80:\n"
+        "  - symbol: CMP.WA\n    name: Comp S.A.\n",
+        encoding="utf-8",
+    )
     return path
 
 
@@ -42,7 +55,13 @@ def test_analyze_credentials_error_exit_code(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(cli, "_predictions_dir", lambda: tmp_path / "predictions")
 
     def fake_run_analysis(
-        watchlist, data_dir, personas_dir, client=None, model=None, max_workers=5
+        watchlist,
+        data_dir,
+        personas_dir,
+        client=None,
+        model=None,
+        max_workers=5,
+        stocks=None,
     ):
         raise AgentError(CREDENTIALS_MSG)
 
@@ -160,7 +179,13 @@ def test_keyboard_interrupt_returns_130(tmp_path, monkeypatch):
     monkeypatch.setattr(cli, "_personas_dir", lambda: personas)
 
     def fake_run_analysis(
-        watchlist, data_dir, personas_dir, client=None, model=None, max_workers=5
+        watchlist,
+        data_dir,
+        personas_dir,
+        client=None,
+        model=None,
+        max_workers=5,
+        stocks=None,
     ):
         raise KeyboardInterrupt
 
@@ -211,7 +236,13 @@ def test_analyze_internal_error_exit_1(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(cli, "_personas_dir", lambda: personas)
 
     def fake_run_analysis(
-        watchlist, data_dir, personas_dir, client=None, model=None, max_workers=5
+        watchlist,
+        data_dir,
+        personas_dir,
+        client=None,
+        model=None,
+        max_workers=5,
+        stocks=None,
     ):
         raise ValueError("programming bug")
 
@@ -221,6 +252,116 @@ def test_analyze_internal_error_exit_1(tmp_path, monkeypatch, capsys):
     out = captured.out + captured.err
     assert "Błąd wewnętrzny: ValueError" in out
     assert "Traceback" not in out
+
+
+def test_analyze_swig80_default_uses_screen(tmp_path, monkeypatch):
+    watchlist = _write_swig80_watchlist(tmp_path)
+    personas = _write_personas(tmp_path)
+    monkeypatch.setattr(cli, "_watchlist_path", lambda: watchlist)
+    monkeypatch.setattr(cli, "_data_dir", lambda: tmp_path / "data")
+    monkeypatch.setattr(cli, "_personas_dir", lambda: personas)
+    monkeypatch.setattr(cli, "_predictions_dir", lambda: tmp_path / "predictions")
+    monkeypatch.delenv("AGENT_PREDYKCJE_LIVE_STOCKS", raising=False)
+
+    frame = pd.DataFrame({"date": ["2026-10-27"], "close": [10.0]})
+    monkeypatch.setattr(cli, "load_price_frame", lambda data_dir, symbol: frame)
+    screen_result = {"rows": [], "selected": ["CMP.WA"], "skipped": []}
+    monkeypatch.setattr(cli, "screen_universe", lambda entries, frames: screen_result)
+
+    captured = {}
+
+    def fake_run_analysis(
+        watchlist,
+        data_dir,
+        personas_dir,
+        client=None,
+        model=None,
+        max_workers=5,
+        stocks=None,
+    ):
+        captured["stocks"] = stocks
+        return {"created_at": "x", "model": "m", "stocks": []}
+
+    monkeypatch.setattr(cli, "run_analysis", fake_run_analysis)
+    saved = []
+    monkeypatch.setattr(
+        cli,
+        "save_snapshot",
+        lambda snapshot, predictions_dir: saved.append(snapshot)
+        or tmp_path / "predictions.json",
+    )
+    assert cli.main(["analyze"]) == 0
+    assert captured["stocks"] == ["CMP.WA"]
+    assert saved[0]["screen"] == screen_result
+
+
+def test_analyze_watchlist_mode_legacy(tmp_path, monkeypatch):
+    watchlist = _write_watchlist(tmp_path)
+    personas = _write_personas(tmp_path)
+    monkeypatch.setattr(cli, "_watchlist_path", lambda: watchlist)
+    monkeypatch.setattr(cli, "_data_dir", lambda: tmp_path / "data")
+    monkeypatch.setattr(cli, "_personas_dir", lambda: personas)
+    monkeypatch.setattr(cli, "_predictions_dir", lambda: tmp_path / "predictions")
+    monkeypatch.delenv("AGENT_PREDYKCJE_LIVE_STOCKS", raising=False)
+
+    captured = {}
+
+    def fake_run_analysis(
+        watchlist,
+        data_dir,
+        personas_dir,
+        client=None,
+        model=None,
+        max_workers=5,
+        stocks=None,
+    ):
+        captured["stocks"] = stocks
+        return {"created_at": "x", "model": "m", "stocks": []}
+
+    monkeypatch.setattr(cli, "run_analysis", fake_run_analysis)
+    saved = []
+    monkeypatch.setattr(
+        cli,
+        "save_snapshot",
+        lambda snapshot, predictions_dir: saved.append(snapshot)
+        or tmp_path / "predictions.json",
+    )
+    assert cli.main(["analyze", "--universe", "watchlist"]) == 0
+    assert captured["stocks"] is None
+    assert "screen" not in saved[0]
+
+
+def test_env_override_forces_stocks(tmp_path, monkeypatch):
+    watchlist = _write_watchlist(tmp_path)
+    personas = _write_personas(tmp_path)
+    monkeypatch.setattr(cli, "_watchlist_path", lambda: watchlist)
+    monkeypatch.setattr(cli, "_data_dir", lambda: tmp_path / "data")
+    monkeypatch.setattr(cli, "_personas_dir", lambda: personas)
+    monkeypatch.setattr(cli, "_predictions_dir", lambda: tmp_path / "predictions")
+    monkeypatch.setenv("AGENT_PREDYKCJE_LIVE_STOCKS", "PKO.WA,PZU.WA")
+
+    captured = {}
+
+    def fake_run_analysis(
+        watchlist,
+        data_dir,
+        personas_dir,
+        client=None,
+        model=None,
+        max_workers=5,
+        stocks=None,
+    ):
+        captured["stocks"] = stocks
+        return {"created_at": "x", "model": "m", "stocks": []}
+
+    monkeypatch.setattr(cli, "run_analysis", fake_run_analysis)
+    monkeypatch.setattr(
+        cli,
+        "save_snapshot",
+        lambda snapshot, predictions_dir: tmp_path / "predictions.json",
+    )
+    assert cli.main(["analyze"]) == 0
+    assert captured["stocks"] == ["PKO.WA", "PZU.WA"]
 
 
 def test_collect_partial_failure_exit_0(tmp_path, monkeypatch, capsys):
