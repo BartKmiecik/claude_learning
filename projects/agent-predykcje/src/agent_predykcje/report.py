@@ -12,8 +12,15 @@ import plotly.graph_objects as go
 
 DISCLAIMER = "narzędzie szkoleniowe, nie porada inwestycyjna"
 
-_HORIZONS = ("1d", "1w", "1m")
-_CATEGORIES = ["Dziś", "+1 dzień", "+1 tydzień", "+1 miesiąc"]
+_HORIZONS = ("1d", "1w", "1m", "3m", "6m")
+_CATEGORIES = [
+    "Dziś",
+    "+1 dzień",
+    "+1 tydzień",
+    "+1 miesiąc",
+    "+3 miesiące",
+    "+6 miesięcy",
+]
 _GREEN = "#1a7f37"
 _RED = "#c62828"
 _GRAY = "#6b7280"
@@ -56,30 +63,45 @@ def ok_agents(stock: dict) -> list[dict]:
 
 
 def averages(stock: dict) -> dict | None:
-    """Mean prediction per horizon over ok agents; None when there are none."""
+    """Mean prediction per horizon over ok agents; None when there are none.
+
+    Horizons absent from every agent (legacy snapshots without 3m/6m) are
+    skipped rather than averaged.
+    """
     agents = ok_agents(stock)
     if not agents:
         return None
-    result = {
-        horizon: sum(agent["predictions"][horizon] for agent in agents) / len(agents)
-        for horizon in _HORIZONS
-    }
+    result = {}
+    for horizon in _HORIZONS:
+        values = [
+            agent["predictions"][horizon]
+            for agent in agents
+            if horizon in agent["predictions"]
+        ]
+        if values:
+            result[horizon] = sum(values) / len(values)
     result["count"] = len(agents)
     return result
 
 
 def horizon_band(stock: dict) -> dict | None:
-    """(min, max) prediction per horizon over ok agents; None when none."""
+    """(min, max) prediction per horizon over ok agents; None when none.
+
+    Horizons absent from every agent (legacy snapshots) are skipped.
+    """
     agents = ok_agents(stock)
     if not agents:
         return None
-    return {
-        horizon: (
-            min(agent["predictions"][horizon] for agent in agents),
-            max(agent["predictions"][horizon] for agent in agents),
-        )
-        for horizon in _HORIZONS
-    }
+    result = {}
+    for horizon in _HORIZONS:
+        values = [
+            agent["predictions"][horizon]
+            for agent in agents
+            if horizon in agent["predictions"]
+        ]
+        if values:
+            result[horizon] = (min(values), max(values))
+    return result
 
 
 def gain_1m(stock: dict) -> float | None:
@@ -117,14 +139,17 @@ def badge_html(gain: float) -> str:
 
 
 def band_figure(stock: dict) -> go.Figure:
-    """Horizon band chart: min–max polygon behind the black average line."""
+    """Horizon band chart: min–max polygon behind the black average line.
+
+    Missing horizons (legacy snapshots) fall back to the anchor price, so
+    the chart stays flat there instead of crashing.
+    """
     anchor_price = stock["anchor"]["price"]
-    means = averages(stock) or {horizon: anchor_price for horizon in _HORIZONS}
-    band = horizon_band(stock) or {
-        horizon: (anchor_price, anchor_price) for horizon in _HORIZONS
-    }
-    mins = [anchor_price] + [band[horizon][0] for horizon in _HORIZONS]
-    maxes = [anchor_price] + [band[horizon][1] for horizon in _HORIZONS]
+    means = averages(stock) or {}
+    band = horizon_band(stock) or {}
+    fallback = (anchor_price, anchor_price)
+    mins = [anchor_price] + [band.get(horizon, fallback)[0] for horizon in _HORIZONS]
+    maxes = [anchor_price] + [band.get(horizon, fallback)[1] for horizon in _HORIZONS]
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
@@ -139,7 +164,8 @@ def band_figure(stock: dict) -> go.Figure:
     fig.add_trace(
         go.Scatter(
             x=_CATEGORIES,
-            y=[anchor_price, means["1d"], means["1w"], means["1m"]],
+            y=[anchor_price]
+            + [means.get(horizon, anchor_price) for horizon in _HORIZONS],
             mode="lines+markers",
             line=dict(color="#111", width=3),
             showlegend=False,
@@ -154,31 +180,37 @@ def _price_pl(value: float) -> str:
     return f"{value:.2f}".replace(".", ",")
 
 
+def _pred_cell(value) -> str:
+    """Table cell for a prediction: price, or — when the value is missing."""
+    return _price_pl(value) if isinstance(value, (int, float)) else "—"
+
+
 def _agents_table(stock: dict) -> str:
     rows = []
     for agent in stock["agents"]:
         name = html.escape(agent["display_name"])
         if agent.get("status") == "ok" and agent.get("predictions"):
             cells = "".join(
-                f"<td>{_price_pl(agent['predictions'][horizon])}</td>"
+                f"<td>{_pred_cell(agent['predictions'].get(horizon))}</td>"
                 for horizon in _HORIZONS
             )
             justification = html.escape(agent["justification"] or "")
         else:
-            cells = "<td>brak danych</td>" * 3
+            cells = "<td>brak danych</td>" * len(_HORIZONS)
             justification = "—"
         rows.append(f"<tr><td>{name}</td>{cells}<td>{justification}</td></tr>")
     means = averages(stock)
     if means is not None:
         avg_cells = "".join(
-            f"<td>{_price_pl(means[horizon])}</td>" for horizon in _HORIZONS
+            f"<td>{_pred_cell(means.get(horizon))}</td>" for horizon in _HORIZONS
         )
     else:
-        avg_cells = "<td>brak danych</td>" * 3
+        avg_cells = "<td>brak danych</td>" * len(_HORIZONS)
     rows.append(f"<tr><td>Średnia</td>{avg_cells}<td></td></tr>")
     head = (
         "<tr><th>Agent</th><th>+1 dzień</th><th>+1 tydzień</th>"
-        "<th>+1 miesiąc</th><th>Uzasadnienie</th></tr>"
+        "<th>+1 miesiąc</th><th>+3 miesiące</th><th>+6 miesięcy</th>"
+        "<th>Uzasadnienie</th></tr>"
     )
     return f"<table border='1' cellpadding='4'>{head}{''.join(rows)}</table>"
 

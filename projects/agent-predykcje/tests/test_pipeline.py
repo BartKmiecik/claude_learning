@@ -45,7 +45,7 @@ def _write_personas(personas_dir):
 
 def _ok_result():
     return {
-        "predictions": {"1d": 80.0, "1w": 81.0, "1m": 85.0},
+        "predictions": {"1d": 80.0, "1w": 81.0, "1m": 85.0, "3m": 90.0, "6m": 95.0},
         "justification": "trend wzrostowy",
     }
 
@@ -144,6 +144,7 @@ def test_run_analysis_one_agent_error(tmp_path, monkeypatch):
     assert ok["display_name"] == "Analityk A"
     assert ok["error"] is None
     assert ok["predictions"]["1m"] is not None
+    assert ok["predictions"]["6m"] == 95.0
     assert ok["justification"] == "trend wzrostowy"
     failed = by_id["b"]
     assert failed["status"] == "error"

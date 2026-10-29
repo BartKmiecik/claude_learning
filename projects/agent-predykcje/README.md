@@ -1,7 +1,7 @@
 # agent-predykcje
 
 Projekt szkoleniowy: dziesięciu agentów LLM, każdy z inną osobowością,
-przewiduje ceny akcji z GPW w trzech horyzontach (1 dzień, 1 tydzień, 1 miesiąc).
+przewiduje ceny akcji z GPW w pięciu horyzontach (1 dzień, 1 tydzień, 1 miesiąc, 3 miesiące, 6 miesięcy).
 
 ## Co robi
 

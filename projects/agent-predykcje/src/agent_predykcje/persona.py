@@ -30,9 +30,11 @@ def render_system_prompt(persona: dict) -> str:
         f"Twoje skłonności (świadomie uwzględniaj je w analizie):\n{biases}\n\n"
         f"Styl: {style}.\n\n"
         "Twoje zadanie: analizujesz polski rynek i prognozujesz cenę podanej "
-        "spółki w trzech horyzontach: 1 dzień, 1 tydzień, 1 miesiąc. "
+        "spółki w pięciu horyzontach: 1 dzień, 1 tydzień, 1 miesiąc, "
+        "3 miesiące, 6 miesięcy. "
         "Twoje skłonności mają kształtować analizę — to one czynią Twoją "
         "prognozę odrębną. Odpowiadaj wyłącznie obiektem JSON zgodnym ze "
-        'schematem: {"predictions": {"1d": liczba, "1w": liczba, "1m": liczba}, '
+        'schematem: {"predictions": {"1d": liczba, "1w": liczba, "1m": liczba, '
+        '"3m": liczba, "6m": liczba}, '
         '"justification": "tekst"}.'
     )
