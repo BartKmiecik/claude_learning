@@ -127,3 +127,92 @@ def test_band_figure_traces():
     assert list(line.y) == [62.0, 62.0, 64.0, 66.0]
     assert fig.layout.height == 320
     assert fig.layout.yaxis.title.text == "PLN"
+
+
+_ALL_TRUE_SIGNALS = {
+    "price_above_sma20": True,
+    "price_above_sma50": True,
+    "sma20_above_sma50": True,
+    "macd_above_signal": True,
+    "rsi_between_50_70": True,
+    "return_1m_positive": True,
+    "return_3m_positive": True,
+    "price_above_bollinger_upper": True,
+}
+
+
+def _screen_row(
+    symbol, name, score, signals, return_1m, return_3m, selected=False, reason=None
+):
+    return {
+        "symbol": symbol,
+        "name": name,
+        "score": score,
+        "signals": signals,
+        "return_1m": return_1m,
+        "return_3m": return_3m,
+        "selected": selected,
+        "reason": reason,
+    }
+
+
+def _screened_snapshot(rows):
+    snapshot = _snapshot(
+        _stock("PKO.WA", 62.0, [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0})])
+    )
+    snapshot["screen"] = {
+        "rows": rows,
+        "selected": [r["symbol"] for r in rows if r["selected"]],
+        "skipped": [],
+    }
+    return snapshot
+
+
+def test_screen_section_renders_when_present(tmp_path):
+    # wybrany (wszystkie sygnały True), niewybrany (score 3), wykluczony.
+    partial = {key: i < 3 for i, key in enumerate(_ALL_TRUE_SIGNALS)}
+    screen = _screened_snapshot(
+        [
+            _screen_row(
+                "ABC.WA", "ABC", 8, dict(_ALL_TRUE_SIGNALS), 0.123, 0.05, selected=True
+            ),
+            _screen_row("DEF.WA", "DEF", 3, partial, -0.01, 0.02),
+            _screen_row(
+                "GHI.WA", "GHI", None, None, None, None, reason="za mało sesji (<64)"
+            ),
+        ]
+    )
+    render_report(screen, tmp_path / "raport.html")
+    text = (tmp_path / "raport.html").read_text(encoding="utf-8")
+    assert "<h2>Screening sWIG80" in text
+    assert "ABC.WA" in text and "GHI.WA" in text
+    assert "✓" in text and "✗" in text and "—" in text
+    assert "+12,3%" in text
+    assert "Score" in text and "Powód" in text
+    assert "SMA20" in text and "Boll." in text
+    assert html_mod.escape("za mało sesji (<64)") in text
+    assert text.index("ABC.WA") < text.index("GHI.WA")  # display order kept
+
+
+def test_legacy_snapshot_without_screen(tmp_path):
+    snapshot = _snapshot(
+        _stock("PKO.WA", 62.0, [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0})])
+    )
+    render_report(snapshot, tmp_path / "raport.html")
+    text = (tmp_path / "raport.html").read_text(encoding="utf-8")
+    assert "Screening sWIG80" not in text
+
+
+def test_screen_section_escapes_html(tmp_path):
+    evil = "<script>alert(1)</script>"
+    screen = _screened_snapshot(
+        [
+            _screen_row(
+                "ABC.WA", evil, 8, dict(_ALL_TRUE_SIGNALS), 0.0, 0.0, selected=True
+            ),
+        ]
+    )
+    render_report(screen, tmp_path / "raport.html")
+    text = (tmp_path / "raport.html").read_text(encoding="utf-8")
+    assert "<script>alert" not in text
+    assert html_mod.escape(evil) in text

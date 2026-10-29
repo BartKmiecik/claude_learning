@@ -17,6 +17,33 @@ _CATEGORIES = ["Dziś", "+1 dzień", "+1 tydzień", "+1 miesiąc"]
 _GREEN = "#1a7f37"
 _RED = "#c62828"
 _GRAY = "#6b7280"
+_SCREEN_HEADERS = (
+    "Wybrane",
+    "Symbol",
+    "Nazwa",
+    "Score",
+    "SMA20",
+    "SMA50",
+    "20>50",
+    "MACD",
+    "RSI",
+    "1M",
+    "3M",
+    "Boll.",
+    "Zwrot 1M",
+    "Zwrot 3M",
+    "Powód",
+)
+_SCREEN_SIGNALS = (
+    "price_above_sma20",
+    "price_above_sma50",
+    "sma20_above_sma50",
+    "macd_above_signal",
+    "rsi_between_50_70",
+    "return_1m_positive",
+    "return_3m_positive",
+    "price_above_bollinger_upper",
+)
 
 
 def ok_agents(stock: dict) -> list[dict]:
@@ -159,6 +186,42 @@ def _agents_table(stock: dict) -> str:
     return f"<table border='1' cellpadding='4'>{head}{''.join(rows)}</table>"
 
 
+def _percent_pl(ratio: float) -> str:
+    """Polish percent string: signed, one decimal, with a comma."""
+    return f"{ratio * 100:+.1f}%".replace(".", ",")
+
+
+def _screen_table(screen: dict) -> str:
+    """HTML ranking table for the sWIG80 screening result."""
+    head = "".join(f"<th>{html.escape(name)}</th>" for name in _SCREEN_HEADERS)
+    rows = []
+    for row in screen["rows"]:
+        cells = [
+            "<td>✓</td>" if row["selected"] else "<td></td>",
+            f"<td>{html.escape(row['symbol'] or '')}</td>",
+            f"<td>{html.escape(row['name'] or '')}</td>",
+        ]
+        signals = row["signals"]
+        if signals is None:
+            cells.append("<td>—</td>")  # Score
+            cells.extend(["<td>—</td>"] * len(_SCREEN_SIGNALS))
+            cells.extend(["<td>—</td>", "<td>—</td>"])  # Zwrot 1M, Zwrot 3M
+        else:
+            cells.append(f"<td>{row['score']}</td>")
+            cells.extend(
+                "<td>✓</td>" if signals[key] else "<td>✗</td>"
+                for key in _SCREEN_SIGNALS
+            )
+            cells.append(f"<td>{_percent_pl(row['return_1m'])}</td>")
+            cells.append(f"<td>{_percent_pl(row['return_3m'])}</td>")
+        cells.append(f"<td>{html.escape(row['reason'] or '')}</td>")
+        rows.append(f"<tr>{''.join(cells)}</tr>")
+    table = (
+        f"<table border='1' cellpadding='4'><tr>{head}</tr>" f"{''.join(rows)}</table>"
+    )
+    return "\n".join(["<h2>Screening sWIG80 — ranking spółek</h2>", table])
+
+
 def _stock_section(stock: dict, rank: int, include_plotlyjs: bool) -> str:
     symbol = html.escape(stock["symbol"])
     anchor = stock.get("anchor")
@@ -192,6 +255,8 @@ def render_report(snapshot: dict, out_path) -> str:
         parts.append(_stock_section(stock, rank, include_plotlyjs=first_figure))
         if stock.get("anchor"):
             first_figure = False
+    if snapshot.get("screen"):
+        parts.append(_screen_table(snapshot["screen"]))
     parts.append("</body></html>")
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
