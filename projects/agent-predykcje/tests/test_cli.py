@@ -364,6 +364,53 @@ def test_env_override_forces_stocks(tmp_path, monkeypatch):
     assert captured["stocks"] == ["PKO.WA", "PZU.WA"]
 
 
+def test_env_override_keeps_screen_in_swig80(tmp_path, monkeypatch, capsys):
+    watchlist = _write_swig80_watchlist(tmp_path)
+    personas = _write_personas(tmp_path)
+    monkeypatch.setattr(cli, "_watchlist_path", lambda: watchlist)
+    monkeypatch.setattr(cli, "_data_dir", lambda: tmp_path / "data")
+    monkeypatch.setattr(cli, "_personas_dir", lambda: personas)
+    monkeypatch.setattr(cli, "_predictions_dir", lambda: tmp_path / "predictions")
+    monkeypatch.setenv("AGENT_PREDYKCJE_LIVE_STOCKS", "PKO.WA,PZU.WA")
+
+    frame = pd.DataFrame({"date": ["2026-10-27"], "close": [10.0]})
+    monkeypatch.setattr(cli, "load_price_frame", lambda data_dir, symbol: frame)
+    screen_result = {
+        "rows": [{"symbol": "CMP.WA"}],
+        "selected": ["CMP.WA"],
+        "skipped": [],
+    }
+    monkeypatch.setattr(cli, "screen_universe", lambda entries, frames: screen_result)
+
+    captured = {}
+
+    def fake_run_analysis(
+        watchlist,
+        data_dir,
+        personas_dir,
+        client=None,
+        model=None,
+        max_workers=5,
+        stocks=None,
+    ):
+        captured["stocks"] = stocks
+        return {"created_at": "x", "model": "m", "stocks": []}
+
+    monkeypatch.setattr(cli, "run_analysis", fake_run_analysis)
+    saved = []
+    monkeypatch.setattr(
+        cli,
+        "save_snapshot",
+        lambda snapshot, predictions_dir: saved.append(snapshot)
+        or tmp_path / "predictions.json",
+    )
+    assert cli.main(["analyze"]) == 0
+    assert captured["stocks"] == ["PKO.WA", "PZU.WA"]
+    assert saved[0]["screen"] == screen_result
+    out = capsys.readouterr().out
+    assert "Screening: wybrano 1 spółek z 1 pozycji." in out
+
+
 def test_collect_partial_failure_exit_0(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
         cli, "load_watchlist",

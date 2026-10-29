@@ -80,12 +80,11 @@ def cmd_analyze(args) -> int:
 
     stocks = None
     screen = None
-    env_stocks = os.environ.get("AGENT_PREDYKCJE_LIVE_STOCKS")
-    if env_stocks:
-        stocks = [symbol.strip() for symbol in env_stocks.split(",") if symbol.strip()]
-    elif args.universe == "swig80":
+    env_stocks = (os.environ.get("AGENT_PREDYKCJE_LIVE_STOCKS") or "").strip()
+    if args.universe == "swig80":
+        entries = swig80_entries(watchlist)
         frames = {}
-        for entry in swig80_entries(watchlist):
+        for entry in entries:
             symbol = entry.get("symbol")
             if not symbol:
                 continue
@@ -93,12 +92,15 @@ def cmd_analyze(args) -> int:
                 frames[symbol] = load_price_frame(_data_dir(), symbol)
             except FileNotFoundError:
                 continue
-        screen = screen_universe(swig80_entries(watchlist), frames)
-        stocks = screen["selected"]
+        screen = screen_universe(entries, frames)
         print(
             f"Screening: wybrano {len(screen['selected'])} spółek z "
             f"{len(screen['rows'])} pozycji."
         )
+    if env_stocks:
+        stocks = [symbol.strip() for symbol in env_stocks.split(",") if symbol.strip()]
+    elif screen is not None:
+        stocks = screen["selected"]
 
     snapshot = run_analysis(
         watchlist,
