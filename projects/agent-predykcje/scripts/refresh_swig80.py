@@ -170,6 +170,13 @@ def main(argv) -> int:
         if temp_pdf is not None:
             temp_pdf.unlink(missing_ok=True)
 
+    if not rows:
+        print(
+            "Błąd: PDF nie zawiera wpisów sWIG80 — watchlista nie została zmieniona.",
+            file=sys.stderr,
+        )
+        return 1
+
     try:
         header_lines, watchlist = _load_watchlist(args.watchlist)
         watchlist["swig80"] = update_entries(rows, watchlist.get("swig80") or [])

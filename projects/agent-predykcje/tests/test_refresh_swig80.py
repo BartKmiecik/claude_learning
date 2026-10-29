@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 import yaml
+from pypdf import PdfWriter
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
@@ -101,3 +102,31 @@ def test_main_writes_watchlist(tmp_path):
         e.get("symbol") is not None or e.get("needs_symbol_verification")
         for e in reloaded["swig80"]
     )
+
+
+def test_main_refuses_empty_parse(tmp_path, capsys):
+    # PDF bez sekcji sWIG80 → zero wierszy: błąd, watchlista nietknięta.
+    blank_pdf = tmp_path / "blank.pdf"
+    writer = PdfWriter()
+    writer.add_blank_page(width=612, height=792)
+    with open(blank_pdf, "wb") as f:
+        writer.write(f)
+    watchlist = tmp_path / "watchlist.yaml"
+    watchlist.write_text(
+        "# Komentarz nagłówkowy.\n"
+        "stocks:\n"
+        "- PKO.WA\n"
+        "swig80:\n"
+        "- symbol: CMP.WA\n"
+        "  ticker: CMP\n"
+        "  name: Comp S.A.\n"
+        "  isin: PLCMP0000017\n",
+        encoding="utf-8",
+    )
+    original = watchlist.read_bytes()
+    rc = main(["--pdf", str(blank_pdf), "--watchlist", str(watchlist)])
+    captured = capsys.readouterr()
+    assert rc == 1
+    assert watchlist.read_bytes() == original  # plik bez zmian
+    assert "Zaktualizowano" not in captured.out  # brak komunikatu sukcesu
+    assert "nie zawiera wpisów" in captured.err
