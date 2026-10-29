@@ -176,6 +176,13 @@ def main(argv) -> int:
             file=sys.stderr,
         )
         return 1
+    elif len(rows) < 50:
+        print(
+            f"Błąd: PDF zawiera tylko {len(rows)} wpisów sWIG80 (oczekiwano 80)"
+            " — watchlista nie została zmieniona.",
+            file=sys.stderr,
+        )
+        return 1
 
     try:
         header_lines, watchlist = _load_watchlist(args.watchlist)

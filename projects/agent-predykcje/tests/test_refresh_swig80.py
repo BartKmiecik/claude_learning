@@ -8,6 +8,7 @@ from pypdf import PdfWriter
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
+import refresh_swig80  # noqa: E402
 from refresh_swig80 import main, parse_portfolio_pdf, update_entries  # noqa: E402
 
 PDF = (
@@ -130,3 +131,34 @@ def test_main_refuses_empty_parse(tmp_path, capsys):
     assert watchlist.read_bytes() == original  # plik bez zmian
     assert "Zaktualizowano" not in captured.out  # brak komunikatu sukcesu
     assert "nie zawiera wpisów" in captured.err
+
+
+def test_main_refuses_undercounted_parse(tmp_path, capsys, monkeypatch):
+    # Parsowanie daje tylko 3 wiersze zamiast 80: błąd, watchlista nietknięta.
+    partial_pdf = tmp_path / "partial.pdf"
+    partial_pdf.write_bytes(b"%PDF-1.4")
+    rows = [
+        {"isin": "PLA0000000001", "kod": "AAA", "name": "AAA"},
+        {"isin": "PLB0000000002", "kod": "BBB", "name": "BBB"},
+        {"isin": "PLC0000000003", "kod": "CCC", "name": "CCC"},
+    ]
+    monkeypatch.setattr(refresh_swig80, "parse_portfolio_pdf", lambda _pdf_path: rows)
+    watchlist = tmp_path / "watchlist.yaml"
+    watchlist.write_text(
+        "# Komentarz nagłówkowy.\n"
+        "stocks:\n"
+        "- PKO.WA\n"
+        "swig80:\n"
+        "- symbol: CMP.WA\n"
+        "  ticker: CMP\n"
+        "  name: Comp S.A.\n"
+        "  isin: PLCMP0000017\n",
+        encoding="utf-8",
+    )
+    original = watchlist.read_bytes()
+    rc = main(["--pdf", str(partial_pdf), "--watchlist", str(watchlist)])
+    captured = capsys.readouterr()
+    assert rc == 1
+    assert watchlist.read_bytes() == original  # plik bez zmian
+    assert "Zaktualizowano" not in captured.out  # brak komunikatu sukcesu
+    assert "oczekiwano 80" in captured.err
