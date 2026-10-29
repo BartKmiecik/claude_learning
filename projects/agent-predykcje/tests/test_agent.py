@@ -148,8 +148,7 @@ def test_predict_stock_pins_wire_shape():
     assert kwargs["output_config"]["format"]["type"] == "json_schema"
     assert kwargs["output_config"]["effort"] == "medium"
     assert (
-        kwargs["extra_headers"]["anthropic-beta"]
-        == "server-side-fallback-2026-07-01"
+        kwargs["extra_headers"]["anthropic-beta"] == "server-side-fallback-2026-07-01"
     )
     assert kwargs["extra_body"] == {"fallbacks": "default"}
 

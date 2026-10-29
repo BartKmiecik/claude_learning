@@ -413,7 +413,8 @@ def test_env_override_keeps_screen_in_swig80(tmp_path, monkeypatch, capsys):
 
 def test_collect_partial_failure_exit_0(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
-        cli, "load_watchlist",
+        cli,
+        "load_watchlist",
         lambda path: {"stocks": ["PKO.WA", "PZU.WA"], "indices": []},
     )
     monkeypatch.setattr(
@@ -430,9 +431,7 @@ def test_collect_partial_failure_exit_0(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
         cli,
         "fetch_news",
-        lambda feeds: [
-            {"title": "t", "published": "2026-10-27", "link": "https://x"}
-        ],
+        lambda feeds: [{"title": "t", "published": "2026-10-27", "link": "https://x"}],
     )
     monkeypatch.setattr(cli, "save_news", lambda items, data_dir: None)
     assert cli.main(["collect"]) == 0
@@ -444,7 +443,8 @@ def test_collect_partial_failure_exit_0(tmp_path, monkeypatch, capsys):
 
 def test_collect_all_failed_exit_1(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr(
-        cli, "load_watchlist",
+        cli,
+        "load_watchlist",
         lambda path: {"stocks": ["PZU.WA"], "indices": []},
     )
     monkeypatch.setattr(

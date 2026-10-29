@@ -61,8 +61,7 @@ def averages(stock: dict) -> dict | None:
     if not agents:
         return None
     result = {
-        horizon: sum(agent["predictions"][horizon] for agent in agents)
-        / len(agents)
+        horizon: sum(agent["predictions"][horizon] for agent in agents) / len(agents)
         for horizon in _HORIZONS
     }
     result["count"] = len(agents)
@@ -120,9 +119,7 @@ def badge_html(gain: float) -> str:
 def band_figure(stock: dict) -> go.Figure:
     """Horizon band chart: min–max polygon behind the black average line."""
     anchor_price = stock["anchor"]["price"]
-    means = averages(stock) or {
-        horizon: anchor_price for horizon in _HORIZONS
-    }
+    means = averages(stock) or {horizon: anchor_price for horizon in _HORIZONS}
     band = horizon_band(stock) or {
         horizon: (anchor_price, anchor_price) for horizon in _HORIZONS
     }
