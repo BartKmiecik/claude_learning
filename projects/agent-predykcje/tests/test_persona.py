@@ -60,6 +60,10 @@ def test_render_system_prompt_contains_persona_and_task():
     assert "1 dzień" in prompt
     assert "1 tydzień" in prompt
     assert "1 miesiąc" in prompt
+    assert "3 miesiące" in prompt
+    assert "6 miesięcy" in prompt
+    assert '"3m"' in prompt
+    assert '"6m"' in prompt
     assert "JSON" in prompt
     assert "schemat" in prompt
     # The task instruction is the final paragraph, so it is the freshest one.

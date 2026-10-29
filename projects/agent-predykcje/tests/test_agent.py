@@ -75,7 +75,7 @@ def _ok_response():
         content=[
             SimpleNamespace(
                 type="text",
-                text='{"predictions":{"1d":62.4,"1w":63.2,"1m":65.1},"justification":"Trend wzrostowy"}',
+                text='{"predictions":{"1d":62.4,"1w":63.2,"1m":65.1,"3m":68.9,"6m":75.0},"justification":"Trend wzrostowy"}',
             )
         ],
         stop_reason="end_turn",
@@ -85,7 +85,13 @@ def _ok_response():
 def test_predict_stock_returns_validated_dict():
     client = FakeClient([_ok_response()])
     result = predict_stock("prompt", "msg", 62.0, client=client, model="m")
-    assert result["predictions"] == {"1d": 62.4, "1w": 63.2, "1m": 65.1}
+    assert result["predictions"] == {
+        "1d": 62.4,
+        "1w": 63.2,
+        "1m": 65.1,
+        "3m": 68.9,
+        "6m": 75.0,
+    }
     assert result["justification"] == "Trend wzrostowy"
 
 
@@ -107,14 +113,26 @@ def test_predict_stock_ratelimit_retries_once():
 
 
 def test_validate_prediction_out_of_range():
-    pred = {"predictions": {"1d": 62.0, "1w": 63.0, "1m": 100.0}, "justification": "x"}
+    pred = {
+        "predictions": {"1d": 62.0, "1w": 63.0, "1m": 100.0, "3m": 70.0, "6m": 80.0},
+        "justification": "x",
+    }
     errors = validate_prediction(pred, 62.0)
     assert any("1m" in e for e in errors)
 
 
 def test_validate_prediction_missing_justification():
-    pred = {"predictions": {"1d": 62.0, "1w": 63.0, "1m": 64.0}}
+    pred = {"predictions": {"1d": 62.0, "1w": 63.0, "1m": 64.0, "3m": 70.0, "6m": 80.0}}
     assert validate_prediction(pred, 62.0)  # non-empty error list
+
+
+def test_validate_prediction_missing_new_horizon():
+    pred = {
+        "predictions": {"1d": 62.0, "1w": 63.0, "1m": 64.0},
+        "justification": "x",
+    }
+    errors = validate_prediction(pred, 62.0)
+    assert any("6m" in e for e in errors)
 
 
 def test_refusal_stop_reason_raises():

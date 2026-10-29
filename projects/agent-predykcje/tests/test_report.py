@@ -57,12 +57,19 @@ def test_averages_ignore_error_agents():
         "PKO.WA",
         62.0,
         [
-            ("a", "A", {"1d": 10.0, "1w": 11.0, "1m": 12.0}),
-            ("b", "B", {"1d": 12.0, "1w": 13.0, "1m": 14.0}),
+            ("a", "A", {"1d": 10.0, "1w": 11.0, "1m": 12.0, "3m": 15.0, "6m": 18.0}),
+            ("b", "B", {"1d": 12.0, "1w": 13.0, "1m": 14.0, "3m": 17.0, "6m": 20.0}),
         ],
         error_ids=["c"],
     )
-    assert averages(stock) == {"1d": 11.0, "1w": 12.0, "1m": 13.0, "count": 2}
+    assert averages(stock) == {
+        "1d": 11.0,
+        "1w": 12.0,
+        "1m": 13.0,
+        "3m": 16.0,
+        "6m": 19.0,
+        "count": 2,
+    }
     assert averages(_stock("PKO.WA", 62.0, [], error_ids=["c"])) is None
 
 
@@ -71,18 +78,27 @@ def test_horizon_band_min_max():
         "PKO.WA",
         62.0,
         [
-            ("a", "A", {"1d": 61.0, "1w": 62.0, "1m": 100.0}),
-            ("b", "B", {"1d": 63.0, "1w": 65.0, "1m": 104.0}),
+            ("a", "A", {"1d": 61.0, "1w": 62.0, "1m": 100.0, "3m": 120.0, "6m": 140.0}),
+            ("b", "B", {"1d": 63.0, "1w": 65.0, "1m": 104.0, "3m": 124.0, "6m": 144.0}),
         ],
     )
     band = horizon_band(stock)
     assert band["1d"] == (61.0, 63.0)
     assert band["1m"] == (100.0, 104.0)
+    assert band["6m"] == (140.0, 144.0)
 
 
 def test_gain_1m_and_sorted_stocks():
-    a = _stock("A.WA", 100.0, [("x", "X", {"1d": 105.0, "1w": 107.0, "1m": 110.0})])
-    b = _stock("B.WA", 50.0, [("x", "X", {"1d": 51.0, "1w": 52.0, "1m": 52.0})])
+    a = _stock(
+        "A.WA",
+        100.0,
+        [("x", "X", {"1d": 105.0, "1w": 107.0, "1m": 110.0, "3m": 120.0, "6m": 130.0})],
+    )
+    b = _stock(
+        "B.WA",
+        50.0,
+        [("x", "X", {"1d": 51.0, "1w": 52.0, "1m": 52.0, "3m": 54.0, "6m": 56.0})],
+    )
     c = _stock("C.WA", 30.0, [])
     assert gain_1m(a) == 10.0
     assert gain_1m(b) == 4.0
@@ -104,7 +120,7 @@ def test_render_failed_agent_row_and_averages(tmp_path):
         _stock(
             "PKO.WA",
             62.0,
-            [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0})],
+            [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0, "3m": 62.0, "6m": 62.0})],
             error_ids=["b"],
         )
     )
@@ -118,7 +134,15 @@ def test_render_failed_agent_row_and_averages(tmp_path):
 
 def test_render_escapes_display_name_and_symbol(tmp_path):
     stock = _stock(
-        "PKO.WA", 62.0, [("a", "<b>Analityk</b>", {"1d": 62.0, "1w": 63.0, "1m": 64.0})]
+        "PKO.WA",
+        62.0,
+        [
+            (
+                "a",
+                "<b>Analityk</b>",
+                {"1d": 62.0, "1w": 63.0, "1m": 64.0, "3m": 66.0, "6m": 68.0},
+            )
+        ],
     )
     stock["symbol"] = "<script>alert(1)</script>"
     render_report(_snapshot(stock), tmp_path / "raport.html")
@@ -131,7 +155,11 @@ def test_render_escapes_display_name_and_symbol(tmp_path):
 
 def test_render_escapes_html_in_justification(tmp_path):
     evil = "<script>alert(1)</script>"
-    stock = _stock("PKO.WA", 62.0, [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0})])
+    stock = _stock(
+        "PKO.WA",
+        62.0,
+        [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0, "3m": 62.0, "6m": 62.0})],
+    )
     stock["agents"][0]["justification"] = evil
     out = render_report(_snapshot(stock), tmp_path / "out" / "raport.html")
     text = (tmp_path / "out" / "raport.html").read_text(encoding="utf-8")
@@ -140,7 +168,11 @@ def test_render_escapes_html_in_justification(tmp_path):
 
 
 def test_render_header_shows_anchor_date(tmp_path):
-    stock = _stock("PKO.WA", 62.0, [("a", "A", {"1d": 62.0, "1w": 63.0, "1m": 64.0})])
+    stock = _stock(
+        "PKO.WA",
+        62.0,
+        [("a", "A", {"1d": 62.0, "1w": 63.0, "1m": 64.0, "3m": 66.0, "6m": 68.0})],
+    )
     stock["anchor"]["date"] = "2026-10-23"
     render_report(_snapshot(stock), tmp_path / "raport.html")
     text = (tmp_path / "raport.html").read_text(encoding="utf-8")
@@ -163,8 +195,16 @@ def test_band_figure_traces():
             "PKO.WA",
             62.0,
             [
-                ("a", "A", {"1d": 61.0, "1w": 63.0, "1m": 65.0}),
-                ("b", "B", {"1d": 63.0, "1w": 65.0, "1m": 67.0}),
+                (
+                    "a",
+                    "A",
+                    {"1d": 61.0, "1w": 63.0, "1m": 65.0, "3m": 69.0, "6m": 73.0},
+                ),
+                (
+                    "b",
+                    "B",
+                    {"1d": 63.0, "1w": 65.0, "1m": 67.0, "3m": 71.0, "6m": 75.0},
+                ),
             ],
         )
     )
@@ -176,6 +216,10 @@ def test_band_figure_traces():
         "+1 dzień",
         "+1 tydzień",
         "+1 miesiąc",
+        "+3 miesiące",
+        "+6 miesięcy",
+        "+6 miesięcy",
+        "+3 miesiące",
         "+1 miesiąc",
         "+1 tydzień",
         "+1 dzień",
@@ -183,9 +227,23 @@ def test_band_figure_traces():
     ]
     assert line.mode == "lines+markers"
     assert line.line.color == "#111" and line.line.width == 3
-    assert list(line.y) == [62.0, 62.0, 64.0, 66.0]
+    assert list(line.y) == [62.0, 62.0, 64.0, 66.0, 70.0, 74.0]
     assert fig.layout.height == 320
     assert fig.layout.yaxis.title.text == "PLN"
+
+
+def test_legacy_snapshot_without_3m_6m_horizons(tmp_path):
+    """Old snapshots (1d/1w/1m only) still render: missing horizons show as —."""
+    stock = _stock(
+        "PKO.WA",
+        62.0,
+        [("a", "A", {"1d": 62.0, "1w": 63.0, "1m": 64.0})],
+    )
+    assert averages(stock) == {"1d": 62.0, "1w": 63.0, "1m": 64.0, "count": 1}
+    render_report(_snapshot(stock), tmp_path / "raport.html")
+    text = (tmp_path / "raport.html").read_text(encoding="utf-8")
+    assert "+3 miesiące" in text and "+6 miesięcy" in text  # headers render
+    assert "—" in text  # missing-horizon cells render as dashes
 
 
 _ALL_TRUE_SIGNALS = {
@@ -217,7 +275,11 @@ def _screen_row(
 
 def _screened_snapshot(rows):
     snapshot = _snapshot(
-        _stock("PKO.WA", 62.0, [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0})])
+        _stock(
+            "PKO.WA",
+            62.0,
+            [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0, "3m": 62.0, "6m": 62.0})],
+        )
     )
     snapshot["screen"] = {
         "rows": rows,
@@ -255,7 +317,11 @@ def test_screen_section_renders_when_present(tmp_path):
 
 def test_legacy_snapshot_without_screen(tmp_path):
     snapshot = _snapshot(
-        _stock("PKO.WA", 62.0, [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0})])
+        _stock(
+            "PKO.WA",
+            62.0,
+            [("a", "A", {"1d": 62.0, "1w": 62.0, "1m": 62.0, "3m": 62.0, "6m": 62.0})],
+        )
     )
     render_report(snapshot, tmp_path / "raport.html")
     text = (tmp_path / "raport.html").read_text(encoding="utf-8")

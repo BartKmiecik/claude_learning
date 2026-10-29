@@ -22,8 +22,10 @@ PREDICTION_SCHEMA = {
                 "1d": {"type": "number"},
                 "1w": {"type": "number"},
                 "1m": {"type": "number"},
+                "3m": {"type": "number"},
+                "6m": {"type": "number"},
             },
-            "required": ["1d", "1w", "1m"],
+            "required": ["1d", "1w", "1m", "3m", "6m"],
             "additionalProperties": False,
         },
         "justification": {"type": "string"},
@@ -97,8 +99,9 @@ def build_user_message(
         f"HISTORIA CEN (ostatnie sesje):\n{history}\n\n"
         f"KONTEKST INDEKSÓW:\n{index_lines}\n\n"
         f"NAJNOWSZE NAGŁÓWKI:\n{news}\n\n"
-        f"ZADANIE: Przewidź cenę akcji {symbol} w trzech horyzontach: "
-        f"1 dzień, 1 tydzień, 1 miesiąc. Zwróć wyłącznie JSON zgodny ze schematem."
+        f"ZADANIE: Przewidź cenę akcji {symbol} w pięciu horyzontach: "
+        f"1 dzień, 1 tydzień, 1 miesiąc, 3 miesiące, 6 miesięcy. "
+        f"Zwróć wyłącznie JSON zgodny ze schematem."
     )
 
 
@@ -115,7 +118,7 @@ def validate_prediction(prediction: dict, anchor_price: float) -> list:
     if not isinstance(predictions, dict):
         return ["pole 'predictions' musi być obiektem"]
     errors = []
-    for horizon in ("1d", "1w", "1m"):
+    for horizon in ("1d", "1w", "1m", "3m", "6m"):
         value = predictions.get(horizon)
         if not isinstance(value, (int, float)):
             errors.append(f"brak prognozy liczbowej dla horyzontu {horizon}")
@@ -193,7 +196,8 @@ def predict_stock(
         if not errors:
             return {
                 "predictions": {
-                    h: float(prediction["predictions"][h]) for h in ("1d", "1w", "1m")
+                    h: float(prediction["predictions"][h])
+                    for h in ("1d", "1w", "1m", "3m", "6m")
                 },
                 "justification": prediction["justification"],
             }
