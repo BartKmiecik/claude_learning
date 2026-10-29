@@ -5,11 +5,15 @@ przewiduje ceny akcji z GPW w trzech horyzontach (1 dzień, 1 tydzień, 1 miesi�
 
 ## Co robi
 
-- `collect` — pobiera 12 miesięcy notowań z Yahoo Finance oraz nagłówki RSS do `data/`,
-- `analyze` — uruchamia 30 wywołań LLM (10 person × 3 spółki z `watchlist.yaml`)
-  i zapisuje migawkę wyników do `predictions/`,
+- `collect` — pobiera 12 miesięcy notowań z Yahoo Finance (spółki i indeksy
+  z `watchlist.yaml`, w tym sekcję `swig80`) oraz nagłówki RSS do `data/`,
+- `analyze` — domyślnie przeprowadza screening sWIG80 i uruchamia około 100
+  wywołań LLM (10 person × 10 wybranych spółek); z `--universe watchlist`
+  analizuje spółki z sekcji `stocks` (obecnie 3 spółki, 30 wywołań); wynik
+  zapisuje jako migawkę w `predictions/`,
 - `report` — generuje samodzielny raport HTML `report/raport.html` i otwiera go
-  w przeglądarce,
+  w przeglądarce; ranking screeningu z migawki trafia do sekcji
+  „Screening sWIG80 — ranking spółek”,
 - `run` — wywołuje po kolei `collect`, `analyze` i `report`.
 
 ## Dziesięć person
@@ -23,10 +27,71 @@ Osobowości są edytowalne — wystarczy zmienić pliki w `personas/`.
 
 ```
 agent-predykcje collect
-agent-predykcje analyze [--model MODEL]
+agent-predykcje analyze [--model MODEL] [--universe {swig80,watchlist}]
 agent-predykcje report [--snapshot predictions/predictions-*.json]
-agent-predykcje run [--model MODEL]
+agent-predykcje run [--model MODEL] [--universe {swig80,watchlist}]
 ```
+
+## Uniwersum analizy
+
+`analyze` i `run` przyjmują `--universe`:
+
+- `swig80` (domyślnie) — screening sWIG80 wybiera 10 spółek do analizy,
+- `watchlist` — analizowane są spółki z sekcji `stocks` w `watchlist.yaml`
+  (obecnie 3 spółki, 30 wywołań LLM zamiast około 100).
+
+Screening jest deterministyczny i liczy dla każdej spółki z sekcji `swig80`
+8 sygnałów wzrostowych na podstawie notowań z `data/`:
+
+- cena > SMA20,
+- cena > SMA50,
+- SMA20 > SMA50,
+- MACD > linia sygnału,
+- RSI(14) między 50 a 70,
+- zwrot 1M > 0,
+- zwrot 3M > 0,
+- cena > górna wstęga Bollingera (SMA20 + 2σ).
+
+Spółki z historią krótszą niż 64 sesje, bez danych lokalnych lub oznaczone
+`skipped: true` są pomijane z powodem w rankingu. Sortowanie: liczba sygnałów
+malejąco, przy remisie zwrot 3M, potem 1M, na końcu symbol rosnąco (wykluczone
+na końcu). Top 10 (a gdy mniej punktowanych — wszystkie) trafia do analizy;
+pełny ranking jest zapisywany w migawce i renderowany w raporcie.
+
+### Nadpisanie listy spółek (smoke test)
+
+Zmienna `AGENT_PREDYKCJE_LIVE_STOCKS` (symbole oddzielone przecinkami, spacje
+obcinane, puste wpisy pomijane; np. `PKO.WA,PZU.WA`) zastępuje listę spółek
+przekazywaną do analizy. Działa w obu trybach; w trybie `swig80` screening
+nadal jest liczony i zapisywany w migawce — zmienia się tylko liczba
+analizowanych spółek.
+
+## Odświeżanie składu sWIG80
+
+Sekcję `swig80` odświeża skrypt `scripts/refresh_swig80.py`, który parsuje
+oficjalny PDF GPW Benchmark (tabelę główną; lista rezerwowa jest pomijana):
+
+```
+python scripts/refresh_swig80.py --pdf PORTFEL.pdf
+python scripts/refresh_swig80.py --url https://example.com/Portfele.pdf
+```
+
+`--pdf` i `--url` wykluczają się wzajemnie (wymagane jest dokładnie jedno);
+`--watchlist PATH` wskazuje inny plik (domyślnie `watchlist.yaml` w katalogu
+projektu). Skrypt dopasowuje wpisy po ISIN, zachowuje zweryfikowane symbole,
+nazwy i flagi istniejących wpisów (np. `skipped`), usuwa wpisy nieobecne
+w PDF, a nowym nadaje `symbol: null`, `ticker: null` oraz
+`needs_symbol_verification: true`. Nowy wpis trzeba uzupełnić ręcznie —
+projekt nigdy nie wylicza symbolu Yahoo z tickera GPW. Pusty wynik parsowania
+przerywa działanie z błędem i nie zmienia watchlisty.
+
+Symbole Yahoo są zapisane w watchliście wprost. Sześć spółek ma w Yahoo symbol
+inny niż ticker GPW: ATAL=`1AT.WA`, HUUUGE=`HUG.WA`, MEDINICE=`ICE.WA`,
+SYN2BIO=`S2B.WA`, CREOTECH=`CRQ.WA`, GREENX=`GRX.WA`.
+
+NIEWIADOW nie ma notowania na GPW w Yahoo Finance — wpis pozostaje w sekcji
+`swig80` z `skipped: true` i powodem „brak notowania na Yahoo (GPW)”;
+`collect` go nie pobiera, a screening pokazuje jako wykluczony.
 
 ## Dane uwierzytelniające
 
@@ -36,7 +101,9 @@ flagą `--model` lub zmienną `AGENT_PREDYKCJE_MODEL`.
 
 ## Koszt
 
-Każde uruchomienie `analyze` to 30 wywołań LLM — planuj budżet API.
+Domyślne uruchomienie `analyze` (tryb `swig80`, 10 spółek) to około 100
+wywołań LLM; `--universe watchlist` to 30 wywołań. `AGENT_PREDYKCJE_LIVE_STOCKS`
+ustala liczbę wywołań do 10 × liczba podanych spółek — planuj budżet API.
 
 ## Zastrzeżenie
 

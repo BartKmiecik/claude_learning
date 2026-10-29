@@ -51,13 +51,22 @@ def _price_history_lines(df: pd.DataFrame, days: int = HISTORY_DAYS) -> list[str
 
 
 def run_analysis(
-    watchlist, data_dir, personas_dir, client=None, model=None, max_workers=5
+    watchlist,
+    data_dir,
+    personas_dir,
+    client=None,
+    model=None,
+    max_workers=5,
+    stocks: list[str] | None = None,
 ) -> dict:
     """Run every (stock, persona) prediction and return the run snapshot.
 
     One shared client across all calls; futures are collected in submission
     order. An AgentError marks that agent's entry with status "error" and
     never aborts the run — any other exception propagates.
+
+    `stocks=None` predicts watchlist["stocks"]; a list predicts exactly
+    those symbols (used by the sWIG80 screening selection).
     """
     client = client or make_client()
     model = model or default_model()
@@ -75,9 +84,10 @@ def run_analysis(
 
     personas = [(path.stem, load_persona(path)) for path in persona_paths(personas_dir)]
 
+    symbols = stocks if stocks is not None else (watchlist.get("stocks", []) or [])
     stocks = []
     prepared = []  # (stock entry, user message) for stocks with data
-    for symbol in watchlist.get("stocks", []) or []:
+    for symbol in symbols:
         try:
             frame = load_price_frame(data_dir, symbol)
         except FileNotFoundError:

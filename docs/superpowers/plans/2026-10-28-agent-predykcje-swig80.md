@@ -107,8 +107,10 @@ Wzory (standardowe definicje): SMA = `close.rolling(w).mean()`; MACD(12,26,9) na
 
 ```python
 def test_score_frame_uptrend():
-    # 100 rosnących closes: 100, 101, ..., 199 → wszystkie sygnały True oprócz RSI
-    df = pd.DataFrame({"date": [...], "close": range(100, 200)})
+    # 99 dni rosnących 100..198 + skok ostatniego dnia do 250
+    # (liniowy ramp NIE przebija SMA20+2σ — wstęga wymaga outliera);
+    # → wszystkie sygnały True oprócz RSI (RSI = 100 przy samych wzrostach)
+    df = pd.DataFrame({"date": [...], "close": [...]})
     s = score_frame(df)
     assert s["signals"]["price_above_sma20"] is True
     assert s["signals"]["price_above_sma50"] is True
@@ -136,7 +138,8 @@ def test_score_frame_rsi_boundaries():
 
 def test_screen_universe_selection_and_order():
     # A: score 8, return_3m 0.10; B: score 8, return_3m 0.20; C: score 5
-    # → rows[0] = B, rows[1] = A; selected == [B, A]; C nie wybrane
+    # → rows[0] = B, rows[1] = A; selected == [B, A, C]
+    # (przy <10 punktowanych wybierane są wszystkie — patrz interfejs wyżej)
 
 def test_screen_universe_tie_break():
     # A i B: score 8, return_3m równy; A return_1m wyższy → A przed B
@@ -396,7 +399,7 @@ Dodaj: tryb `swig80` (domyślny) vs `--universe watchlist`; opis screeningu (8 s
 - [ ] **Step 2: Pełna weryfikacja**
 
 Run: `.venv/Scripts/python.exe -m pytest -q` → oczekiwane: wszystkie przechodzą (63 dotychczasowe + nowe).
-Run: `.venv/Scripts/python.exe -m black --check src tests scripts` → oczekiwane: bez zmian do sformatowania.
+Run: `.venv/Scripts/python.exe -m black src tests scripts` → sformatuj całość (venv ma black 26.x — pliki z mastera sformatowane black 24.x zostaną przeflowane; to celowe, patrz Ruling 2 w ledgerze SDD). Commit reformatu jako osobny commit `style(agent-predykcje): normalize formatting with current black` (jeśli black coś zmienił).
 
 - [ ] **Step 3: Commit**
 
