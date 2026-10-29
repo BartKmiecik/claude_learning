@@ -103,7 +103,7 @@ flagą `--model` lub zmienną `AGENT_PREDYKCJE_MODEL`.
 
 Domyślne uruchomienie `analyze` (tryb `swig80`, 10 spółek) to około 100
 wywołań LLM; `--universe watchlist` to 30 wywołań. `AGENT_PREDYKCJE_LIVE_STOCKS`
-zmniejsza liczbę wywołań do 10 × liczba podanych spółek — planuj budżet API.
+ustala liczbę wywołań do 10 × liczba podanych spółek — planuj budżet API.
 
 ## Zastrzeżenie
 
